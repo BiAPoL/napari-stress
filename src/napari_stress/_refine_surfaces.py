@@ -82,7 +82,7 @@ def trace_refinement_of_surface(image: ImageData,
     fit_data = pd.DataFrame(columns=columns, index=np.arange(mesh.N()))
 
     if show_progress:
-        tk = tqdm.tqdm(range(mesh.N(), desc = 'Processing vertices...'))
+        tk = tqdm.tqdm(range(mesh.N()), desc = 'Processing vertices...')
     else:
         tk = range(mesh.N())
 
