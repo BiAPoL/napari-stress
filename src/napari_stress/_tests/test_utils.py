@@ -51,7 +51,17 @@ def test_surf_utils():
         assert np.array_equal(list_of_surfaces[idx][0], _list_of_surfaces[idx][0])
         assert np.array_equal(list_of_surfaces[idx][1][1], _list_of_surfaces[idx][1][1])
 
+def test_decorator():
+    from napari_stress import reconstruct_surface
+    from napari_stress import list_of_points_to_points
+    from vedo import Sphere
+
+
+    points = [Sphere().points() * k for k in np.arange(1, 2, 0.1)]
+    points = list_of_points_to_points(points)
+
+    surfs = reconstruct_surface(points)
 
 
 if __name__ == '__main__':
-    test_fit_functions()
+    test_decorator()
