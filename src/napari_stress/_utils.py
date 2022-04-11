@@ -1,7 +1,9 @@
 import numpy as np
 import vedo
 
+import napari
 from napari.types import PointsData, SurfaceData
+from napari.layers import Points, Surface
 import inspect
 
 from functools import wraps
@@ -81,24 +83,53 @@ def _func_args_to_list(func: callable) -> list:
     sig = inspect.signature(func)
     return list(sig.parameters.keys())
 
-def frame_by_frame_points(func):
+# def frame_by_frame(function):
 
-    @wraps
-    def wrapper(*args, **kwargs):
+#     @wraps(function)
+#     def wrapper(*args, **kwargs):
 
-        # Assume that first argument is points data
-        data = args[0].copy()
+#         sig = inspect.signature(function)
+#         annotations = [sig.parameters[key].annotation for key in sig.parameters.keys()]
 
-        n_frames = np.max(data[:, 0])
+#         args = list(args)
 
-        _result = []
-        for t in range(n_frames):
-            args[0] = data[data[:, 0] == t, :]
-            _result.append(func(*args, **kwargs))
+#         # try to convert data to napari layers
+#         for idx, arg in enumerate(args):
+#             if not isinstance(arg, annotations[idx]):
+#                 args[idx] = annotations[idx](arg)
 
-        n_points = sum([len(res) for res in _result])
-        result = np.zeros((n_points, 4))
-        return result
+#         # Convert 4D data to list of 3D data
+#         for idx, arg in enumerate(args):
+#             if isinstance(arg, napari.layers.Points):
+#                 args[idx] = pointslayer_to_list_of_points_layer(arg)
+
+#             if isinstance(arg, napari.layers.Surface):
+
+
+#         # Assume that first argument is points data
+#         data = args[0].copy()
+
+#         n_frames = np.max(data[:, 0])
+
+#         _result = []
+#         for t in range(n_frames):
+#             args[0] = data[data[:, 0] == t, :]
+#             _result.append(func(*args, **kwargs))
+
+#         n_points = sum([len(res) for res in _result])
+#         result = np.zeros((n_points, 4))
+#         return result
+#     return wrapper
+
+def pointslayer_to_list_of_points_layer(points: Points) -> list:
+    data = points.data
+
+    #TODO: catch 3D case
+    list_of_points = points_to_list_of_points(data)
+
+    list_of_points = [napari.layers.Points(pts) for pts in list_of_points]
+
+    return list_of_points
 
 def list_of_points_to_points(points: list) -> np.ndarray:
 
