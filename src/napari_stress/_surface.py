@@ -3,6 +3,8 @@
 import numpy as np
 import napari_process_points_and_surfaces as nppas
 from napari.types import LabelsData, SurfaceData, PointsData
+from napari.layers import Points, Surface
+# from ._utils import frame_by_frame
 
 import vedo
 import typing
@@ -14,7 +16,7 @@ def reconstruct_surface(points: PointsData,
                         holeFilling: bool = True,
                         bounds: tuple = (),
                         padding: float = 0.05
-                        ):
+                        ) -> Surface:
     pointcloud = vedo.pointcloud.Points(points)
 
     dims = np.max(pointcloud.points(), axis=0) - np.min(pointcloud.points(), axis=0)
