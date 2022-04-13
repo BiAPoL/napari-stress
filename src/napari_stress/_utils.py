@@ -2,8 +2,7 @@ import numpy as np
 import vedo
 
 import napari
-from napari.types import PointsData, SurfaceData
-from napari.layers import Points, Surface
+from napari.types import PointsData, SurfaceData, ImageData, LabelsData
 import inspect
 
 from functools import wraps
@@ -83,53 +82,57 @@ def _func_args_to_list(func: callable) -> list:
     sig = inspect.signature(func)
     return list(sig.parameters.keys())
 
-# def frame_by_frame(function):
+def frame_by_frame(function):
 
-#     @wraps(function)
-#     def wrapper(*args, **kwargs):
+    @wraps(function)
+    def wrapper(*args, **kwargs):
 
-#         sig = inspect.signature(function)
-#         annotations = [sig.parameters[key].annotation for key in sig.parameters.keys()]
+        sig = inspect.signature(function)
+        annotations = [sig.parameters[key].annotation for key in sig.parameters.keys()]
 
-#         args = list(args)
+        # Dictionary of functions that can convert 4D to list of data
+        funcs_data_to_list = {
+            napari.types.PointsData: points_to_list_of_points,
+            napari.types.SurfaceData: surface_to_list_of_surfaces,
+            napari.types.ImageData: image_to_list_of_images,
+            napari.types.LabelsData: image_to_list_of_images
+            }
 
-#         # try to convert data to napari layers
-#         for idx, arg in enumerate(args):
-#             if not isinstance(arg, annotations[idx]):
-#                 args[idx] = annotations[idx](arg)
+        funcs_list_to_data = {
+            napari.types.PointsData: list_of_points_to_points,
+            napari.types.SurfaceData: list_of_surfaces_to_surface,
+            napari.types.ImageData: list_of_images_to_image,
+            napari.types.LabelsData: list_of_images_to_image
+            }
 
-#         # Convert 4D data to list of 3D data
-#         for idx, arg in enumerate(args):
-#             if isinstance(arg, napari.layers.Points):
-#                 args[idx] = pointslayer_to_list_of_points_layer(arg)
+        supported_data = [ImageData, PointsData, SurfaceData, LabelsData]
 
-#             if isinstance(arg, napari.layers.Surface):
+        args = list(args)
+        n_frames = None
 
+        # Convert 4D data to list(s) of 3D data for every supported argument
+        ind_of_framed_arg = []  # remember which arguments were converted
 
-#         # Assume that first argument is points data
-#         data = args[0].copy()
+        for idx, arg in enumerate(args):
+            if annotations[idx] in supported_data:
+                args[idx] = funcs_data_to_list[annotations[idx]](arg)
+                ind_of_framed_arg.append(idx)
+                n_frames = len(args[idx])
 
-#         n_frames = np.max(data[:, 0])
+        # apply function frame by frame
+        #TODO: Put this in a thread by default?
+        results = [None] * n_frames
+        for t in range(n_frames):
+            _args = args.copy()
 
-#         _result = []
-#         for t in range(n_frames):
-#             args[0] = data[data[:, 0] == t, :]
-#             _result.append(func(*args, **kwargs))
+            # Replace argument value by frame t of argument value
+            for idx in ind_of_framed_arg:
+                _args[idx] = _args[idx][t]
 
-#         n_points = sum([len(res) for res in _result])
-#         result = np.zeros((n_points, 4))
-#         return result
-#     return wrapper
+            results[t] = function(*_args, **kwargs)
 
-def pointslayer_to_list_of_points_layer(points: Points) -> list:
-    data = points.data
-
-    #TODO: catch 3D case
-    list_of_points = points_to_list_of_points(data)
-
-    list_of_points = [napari.layers.Points(pts) for pts in list_of_points]
-
-    return list_of_points
+        return funcs_list_to_data[sig.return_annotation](results)
+    return wrapper
 
 def list_of_points_to_points(points: list) -> np.ndarray:
 
@@ -142,7 +145,14 @@ def list_of_points_to_points(points: list) -> np.ndarray:
 
     return points_out
 
-def points_to_list_of_points(points: np.ndarray) -> list:
+def image_to_list_of_images(image: ImageData) -> list:
+    """Convert 4D image to list of images"""
+    #TODO: Check if it actually is 4D
+    return list(image)
+
+def points_to_list_of_points(points: PointsData) -> list:
+    """Convert a 4D point array to list of 3D points"""
+    #TODO: Check if it actually is 4D
     n_frames = len(np.unique(points[:, 0]))
 
     points_out = [None] * n_frames
@@ -152,7 +162,8 @@ def points_to_list_of_points(points: np.ndarray) -> list:
     return points_out
 
 def surface_to_list_of_surfaces(surface: SurfaceData) -> list:
-
+    """Convert a 4D surface to list of 3D surfaces"""
+    #TODO: Check if it actually is 4D
     points = surface[0]
     faces = np.asarray(surface[1], dtype=int)
 
@@ -174,6 +185,9 @@ def surface_to_list_of_surfaces(surface: SurfaceData) -> list:
         surfaces[t] = (_points, _faces)
 
     return surfaces
+
+def list_of_images_to_image(images: list) -> ImageData:
+    return np.stack(images)
 
 def list_of_surfaces_to_surface(surfs: list) -> tuple:
     """
