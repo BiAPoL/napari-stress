@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
 
 import vedo
-from napari_tools_menu import register_function
-from napari.types import SurfaceData, ImageData
+from napari.types import SurfaceData, ImageData, PointsData
 
-from ._utils import _sigmoid, _gaussian, _func_args_to_list, _detect_drop, _detect_maxima
+from ._utils import _sigmoid,\
+    _gaussian,\
+    _func_args_to_list,\
+    _detect_drop,\
+    _detect_maxima,\
+    frame_by_frame
 
 from scipy.interpolate import RegularGridInterpolator
 from scipy.optimize import curve_fit
@@ -22,18 +26,18 @@ class edge_functions(Enum):
     interior = {'fancy': _sigmoid, 'quick': _detect_drop}
     surface = {'fancy': _gaussian, 'quick': _detect_maxima}
 
-@register_function(menu="Surfaces > Retrace surface vertices (vedo, nppas)")
-def trace_refinement_of_surface(image: ImageData,
+@frame_by_frame
+def trace_refinement_of_surface(intensity_image: ImageData,
                                 surface: SurfaceData,
                                 trace_length: float = 2.0,
                                 sampling_distance: float = 0.1,
                                 selected_fit_type: fit_types = fit_types.fancy_edge_fit,
                                 selected_edge: edge_functions = edge_functions.interior,
                                 scale: np.ndarray = np.array([1.0, 1.0, 1.0]),
-                                show_progress: bool = True,
+                                show_progress: bool = False,
                                 remove_outliers: bool = True,
                                 interquartile_factor: float = 1.5
-                                )-> pd.DataFrame:
+                                )-> PointsData:
     """
     Generate intensity profiles along traces.
 
@@ -58,11 +62,12 @@ def trace_refinement_of_surface(image: ImageData,
     v_step = vectors/n_samples
 
     # Create coords for interpolator
-    X1 = np.arange(0, image.shape[0], 1)
-    X2 = np.arange(0, image.shape[1], 1)
-    X3 = np.arange(0, image.shape[2], 1)
-    rgi = RegularGridInterpolator((X1, X2, X3), image, bounds_error=False,
-                                  fill_value=image.min())
+    X1 = np.arange(0, intensity_image.shape[0], 1)
+    X2 = np.arange(0, intensity_image.shape[1], 1)
+    X3 = np.arange(0, intensity_image.shape[2], 1)
+    rgi = RegularGridInterpolator((X1, X2, X3), intensity_image,
+                                  bounds_error=False,
+                                  fill_value=intensity_image.min())
 
     # Allocate arrays for results
     fit_params = _func_args_to_list(edge_func)[1:]
@@ -124,7 +129,7 @@ def trace_refinement_of_surface(image: ImageData,
         fit_data = _remove_outliers_by_index(fit_data, on=fit_errors,
                                              factor=interquartile_factor)
 
-    return fit_data
+    return np.stack(fit_data['surface_points'].to_numpy())
 
 def _remove_outliers_by_index(df, on=list, factor: float = 1.5) -> pd.DataFrame:
     "Filter all rows that qualify as outliers based on column-statistics."
