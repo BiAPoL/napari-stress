@@ -7,8 +7,10 @@ from ._surface import surface_from_label,\
     adjust_surface_density,\
     smooth_sinc,\
     smoothMLS2D,\
-    reconstruct_surface
-from ._utils import list_of_points_to_pointsdata, list_of_surfaces_to_surface, list_of_points_to_points, points_to_list_of_points
+    reconstruct_surface,\
+    smooth_laplacian
+
+from ._utils import frame_by_frame
 from napari_plugin_engine import napari_hook_implementation
 
 @napari_hook_implementation
