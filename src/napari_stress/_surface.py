@@ -11,6 +11,7 @@ import typing
 
 @frame_by_frame
 def reconstruct_surface(points: PointsData,
+                        dims: list = [100, 100, 100],
                         radius: float = None,
                         sampleSize: int = None,
                         holeFilling: bool = True) -> SurfaceData:
@@ -34,7 +35,8 @@ def reconstruct_surface(points: PointsData,
         sampleSize = None
 
     pointcloud = vedo.pointcloud.Points(points)
-    surf = pointcloud.reconstructSurface(radius=radius,
+    surf = pointcloud.reconstructSurface(dims=dims,
+                                         radius=radius,
                                          sampleSize=sampleSize,
                                          holeFilling=holeFilling)
 
