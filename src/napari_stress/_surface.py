@@ -9,21 +9,12 @@ import vedo
 import typing
 
 @frame_by_frame
-def reconstruct_surface_ball_pivot(points: PointsData,
-                                   radius: float = 5,
-                                   delta: float = 0) -> SurfaceData:
-
-    surface = nppas.surface_from_point_cloud_ball_pivoting(points, radius,
-                                                           delta_radius=delta)
-    return surface
-
-
-@frame_by_frame
-def reconstruct_surface_alpha_shape(points: PointsData,
-                                    alpha:float = 5.0) -> SurfaceData:
-    surf = nppas.surface_from_point_cloud_alpha_shape(points,  alpha=alpha)
-
-    return surf
+def resample_points(points: PointsData) -> PointsData:
+    pointcloud = vedo.pointcloud.Points(points)
+    surface = pointcloud.reconstructSurface()
+    points = nppas.sample_points_poisson_disk((surface.points(), np.asarray(surface.faces())),
+                                              number_of_points=pointcloud.N())
+    return points
 
 @frame_by_frame
 def reconstruct_surface(points: PointsData,
@@ -132,6 +123,6 @@ def adjust_surface_density(surface: SurfaceData,
                                                            delta_radius=delta)
     # Fix holes
     mesh = vedo.mesh.Mesh((surface[0], surface[1]))
-    mesh.fillHoles()
+    mesh.fillHoles(size=(radius+delta)**2)
 
     return (mesh.points(), np.asarray(mesh.faces()))
