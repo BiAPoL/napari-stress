@@ -6,6 +6,7 @@ from napari.types import PointsData, SurfaceData, ImageData, LabelsData
 import inspect
 
 from functools import wraps
+import tqdm
 
 def pointcloud_to_vertices4D(surfs: list) -> np.ndarray:
 
@@ -82,7 +83,7 @@ def _func_args_to_list(func: callable) -> list:
     sig = inspect.signature(func)
     return list(sig.parameters.keys())
 
-def frame_by_frame(function):
+def frame_by_frame(function, progress_bar: bool = False):
 
     @wraps(function)
     def wrapper(*args, **kwargs):
@@ -111,6 +112,7 @@ def frame_by_frame(function):
         n_frames = None
 
         # Convert 4D data to list(s) of 3D data for every supported argument
+        #TODO: Check if objects are actually 4D
         ind_of_framed_arg = []  # remember which arguments were converted
 
         for idx, arg in enumerate(args):
@@ -122,7 +124,8 @@ def frame_by_frame(function):
         # apply function frame by frame
         #TODO: Put this in a thread by default?
         results = [None] * n_frames
-        for t in range(n_frames):
+        it = tqdm.tqdm(range(n_frames)) if progress_bar else range(n_frames)
+        for t in it:
             _args = args.copy()
 
             # Replace argument value by frame t of argument value
