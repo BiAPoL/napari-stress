@@ -18,6 +18,9 @@ import pandas as pd
 
 from enum import Enum
 
+import warnings
+warnings.filterwarnings('ignore')
+
 class fit_types(Enum):
     quick_edge_fit = 'quick'
     fancy_edge_fit = 'fancy'
@@ -28,7 +31,7 @@ class edge_functions(Enum):
 
 @frame_by_frame
 def trace_refinement_of_surface(intensity_image: ImageData,
-                                surface: SurfaceData,
+                                points: PointsData,
                                 trace_length: float = 2.0,
                                 sampling_distance: float = 0.1,
                                 selected_fit_type: fit_types = fit_types.fancy_edge_fit,
@@ -50,15 +53,16 @@ def trace_refinement_of_surface(intensity_image: ImageData,
     edge_func = selected_edge.value[selected_fit_type.value]
 
     # Convert to mesh and calculate normals
-    mesh = vedo.mesh.Mesh((surface[0], surface[1]))
-    mesh.computeNormals()
+    pointcloud = vedo.pointcloud.Points(points)
+    pointcloud.computeNormalsWithPCA()
+
 
     # Define start and end points for the surface tracing vectors
     n_samples = int(trace_length/sampling_distance)
-    start_pts = mesh.points()/scale[None, :] - 0.5 * trace_length * mesh.pointdata['Normals']
+    start_pts = pointcloud.points()/scale[None, :] - 0.5 * trace_length * pointcloud.pointdata['Normals']
 
     # Define trace vectors for full length and for single step
-    vectors = trace_length * mesh.pointdata['Normals']
+    vectors = trace_length * pointcloud.pointdata['Normals']
     v_step = vectors/n_samples
 
     # Create coords for interpolator
@@ -84,12 +88,12 @@ def trace_refinement_of_surface(intensity_image: ImageData,
     projection_vectors = []
     idx_of_border = []
 
-    fit_data = pd.DataFrame(columns=columns, index=np.arange(mesh.N()))
+    fit_data = pd.DataFrame(columns=columns, index=np.arange(pointcloud.N()))
 
     if show_progress:
-        tk = tqdm.tqdm(range(mesh.N(), desc = 'Processing vertices...'))
+        tk = tqdm.tqdm(range(pointcloud.N()), desc = 'Processing vertices...')
     else:
-        tk = range(mesh.N())
+        tk = range(pointcloud.N())
 
     # Iterate over all provided target points
     for idx in tk:
