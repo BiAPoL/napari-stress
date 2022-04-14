@@ -8,6 +8,22 @@ from ._utils import frame_by_frame
 import vedo
 import typing
 
+@frame_by_frame
+def reconstruct_surface_ball_pivot(points: PointsData,
+                                   radius: float = 5,
+                                   delta: float = 0) -> SurfaceData:
+
+    surface = nppas.surface_from_point_cloud_ball_pivoting(points, radius,
+                                                           delta_radius=delta)
+    return surface
+
+
+@frame_by_frame
+def reconstruct_surface_alpha_shape(points: PointsData,
+                                    alpha:float = 5.0) -> SurfaceData:
+    surf = nppas.surface_from_point_cloud_alpha_shape(points,  alpha=alpha)
+
+    return surf
 
 @frame_by_frame
 def reconstruct_surface(points: PointsData,
@@ -95,13 +111,27 @@ def surface_from_label(label_image: LabelsData,
 def adjust_surface_density(surface: SurfaceData,
                            density_target: float) -> SurfaceData:
     """Adjust the number of vertices of a surface to a defined density"""
+    import open3d
 
     mesh = vedo.mesh.Mesh((surface[0], surface[1]))
     n_vertices_target = int(mesh.area() * density_target)
 
-    while surface[0].shape[0] < n_vertices_target:
-        surface = nppas.subdivide_loop(surface)
+    # sample desired number of vertices from surface
+    points = nppas.sample_points_poisson_disk(surface, n_vertices_target)
+    pcd = open3d.geometry.PointCloud()
+    pcd.points = open3d.utility.Vector3dVector(points)
 
-    mesh = vedo.mesh.Mesh((surface[0], surface[1])).decimate(N=n_vertices_target)
+    # measure distances between points
+    distances = np.array(pcd.compute_nearest_neighbor_distance())
+    radius = np.median(distances)
+    delta = 2 * distances.std()
+
+    # reconstruct the surface
+    surface = nppas.surface_from_point_cloud_ball_pivoting(points,
+                                                           radius=radius,
+                                                           delta_radius=delta)
+    # Fix holes
+    mesh = vedo.mesh.Mesh((surface[0], surface[1]))
+    mesh.fillHoles()
 
     return (mesh.points(), np.asarray(mesh.faces()))

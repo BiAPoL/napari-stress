@@ -8,7 +8,9 @@ from ._surface import surface_from_label,\
     smooth_sinc,\
     smoothMLS2D,\
     reconstruct_surface,\
-    smooth_laplacian
+    smooth_laplacian,\
+    reconstruct_surface_alpha_shape,\
+    reconstruct_surface_ball_pivot
 
 from ._utils import frame_by_frame
 from napari_plugin_engine import napari_hook_implementation
