@@ -51,7 +51,21 @@ def test_surf_utils():
         assert np.array_equal(list_of_surfaces[idx][0], _list_of_surfaces[idx][0])
         assert np.array_equal(list_of_surfaces[idx][1][1], _list_of_surfaces[idx][1][1])
 
+def test_decorator(make_napari_viewer):
+    from napari_stress import reconstruct_surface
+    from napari_stress._utils import list_of_points_to_points
+    from vedo import Sphere
+
+    viewer = make_napari_viewer()
+
+    points = [Sphere().points() * k for k in np.arange(1.9, 2.1, 0.1)]
+    points = list_of_points_to_points(points)
+    viewer.add_points(points, size=0.05)
+
+    surf = reconstruct_surface(points)
+    viewer.add_surface(surf)
 
 
 if __name__ == '__main__':
-    test_fit_functions()
+    import napari
+    test_decorator(napari.Viewer)

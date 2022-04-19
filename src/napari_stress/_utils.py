@@ -1,10 +1,14 @@
 import numpy as np
 import vedo
 
-from napari.types import PointsData, SurfaceData
+import napari
+from napari.types import PointsData, SurfaceData, ImageData, LabelsData, LayerDataTuple
+from typing import List
 import inspect
 
 from functools import wraps
+from itertools import chain
+import tqdm
 
 def pointcloud_to_vertices4D(surfs: list) -> np.ndarray:
 
@@ -81,26 +85,94 @@ def _func_args_to_list(func: callable) -> list:
     sig = inspect.signature(func)
     return list(sig.parameters.keys())
 
-def frame_by_frame_points(func):
+def frame_by_frame(function, progress_bar: bool = False):
 
-    @wraps
+    @wraps(function)
     def wrapper(*args, **kwargs):
 
-        # Assume that first argument is points data
-        data = args[0].copy()
+        sig = inspect.signature(function)
+        annotations = [
+            sig.parameters[key].annotation for key in sig.parameters.keys()
+            ]
 
-        n_frames = np.max(data[:, 0])
+        # Dictionary of functions that can convert 4D to list of data
+        funcs_data_to_list = {
+            napari.types.PointsData: points_to_list_of_points,
+            napari.types.SurfaceData: surface_to_list_of_surfaces,
+            napari.types.ImageData: image_to_list_of_images,
+            napari.types.LabelsData: image_to_list_of_images
+            }
 
-        _result = []
-        for t in range(n_frames):
-            args[0] = data[data[:, 0] == t, :]
-            _result.append(func(*args, **kwargs))
+        # DIctionary of functions that can convert lists of data to data
+        funcs_list_to_data = {
+            napari.types.PointsData: list_of_points_to_points,
+            napari.types.SurfaceData: list_of_surfaces_to_surface,
+            napari.types.ImageData: list_of_images_to_image,
+            napari.types.LabelsData: list_of_images_to_image,
+            List[napari.types.LayerDataTuple]: list_of_layerdatatuple_to_layerdatatuple
+            }
 
-        n_points = sum([len(res) for res in _result])
-        result = np.zeros((n_points, 4))
-        return result
+        supported_data = [ImageData, PointsData, SurfaceData, LabelsData]
+
+        args = list(args)
+        n_frames = None
+
+        # Convert 4D data to list(s) of 3D data for every supported argument
+        #TODO: Check if objects are actually 4D
+        ind_of_framed_arg = []  # remember which arguments were converted
+
+        for idx, arg in enumerate(args):
+            if annotations[idx] in supported_data:
+                args[idx] = funcs_data_to_list[annotations[idx]](arg)
+                ind_of_framed_arg.append(idx)
+                n_frames = len(args[idx])
+
+        # apply function frame by frame
+        #TODO: Put this in a thread by default?
+        results = [None] * n_frames
+        it = tqdm.tqdm(range(n_frames)) if progress_bar else range(n_frames)
+        for t in it:
+            _args = args.copy()
+
+            # Replace argument value by frame t of argument value
+            for idx in ind_of_framed_arg:
+                _args[idx] = _args[idx][t]
+
+            results[t] = function(*_args, **kwargs)
+
+        return funcs_list_to_data[sig.return_annotation](results)
+    return wrapper
+
+def list_of_layerdatatuple_to_layerdatatuple(tuple_data: list
+                                             ) -> LayerDataTuple:
+    """Convert a list of 3D layerdatatuple objects to a single 4D LayerDataTuple"""
+
+    # Possible conversion functions for layerdatatuples
+    funcs_list_to_data = {
+        'points': list_of_points_to_points,
+        'surface': list_of_surfaces_to_surface,
+        'image': list_of_images_to_image,
+        'labels': list_of_images_to_image,
+        }
+
+    # Convert data to array with dimensions [result, frame, data]
+    data = list(np.asarray(tuple_data).transpose((1, 0, -1)))
+
+    # Reminder: Each list entry is tuple (data, properties, type)
+    results = [None] * len(data)  # allocate list for results
+    for idx, res in enumerate(data):
+        dtype = res[0, -1]
+        _result = [None] * 3
+        _result[0] = funcs_list_to_data[dtype](res[:, 0])
+        _result[1] = res[0, 1]  # smarter way to combine properties?
+        _result[2] = dtype
+        results[idx] = _result
+
+    return results
+
 
 def list_of_points_to_points(points: list) -> np.ndarray:
+    """Convert list of 3D point data to single 4D point data."""
 
     n_points = sum([len(frame) for frame in points])
     t = np.concatenate([[idx] * len(frame) for idx, frame in enumerate(points)])
@@ -111,7 +183,14 @@ def list_of_points_to_points(points: list) -> np.ndarray:
 
     return points_out
 
-def points_to_list_of_points(points: np.ndarray) -> list:
+def image_to_list_of_images(image: ImageData) -> list:
+    """Convert 4D image to list of images"""
+    #TODO: Check if it actually is 4D
+    return list(image)
+
+def points_to_list_of_points(points: PointsData) -> list:
+    """Convert a 4D point array to list of 3D points"""
+    #TODO: Check if it actually is 4D
     n_frames = len(np.unique(points[:, 0]))
 
     points_out = [None] * n_frames
@@ -121,7 +200,8 @@ def points_to_list_of_points(points: np.ndarray) -> list:
     return points_out
 
 def surface_to_list_of_surfaces(surface: SurfaceData) -> list:
-
+    """Convert a 4D surface to list of 3D surfaces"""
+    #TODO: Check if it actually is 4D
     points = surface[0]
     faces = np.asarray(surface[1], dtype=int)
 
@@ -144,19 +224,13 @@ def surface_to_list_of_surfaces(surface: SurfaceData) -> list:
 
     return surfaces
 
+def list_of_images_to_image(images: list) -> ImageData:
+    """Convert a list of 3D image data to single 4D image data."""
+    return np.stack(images)
+
 def list_of_surfaces_to_surface(surfs: list) -> tuple:
     """
-    Convert vedo surface object to napari-diggestable data format.
-
-    Parameters
-    ----------
-    surfs : typing.Union[vedo.mesh.Mesh, list]
-        DESCRIPTION.
-
-    Returns
-    -------
-    None.
-
+    Convert list of 3D surfaces to single 4D surface.
     """
     if isinstance(surfs[0], vedo.mesh.Mesh):
         surfs = [(s.points(), s.faces()) for s in surfs]
