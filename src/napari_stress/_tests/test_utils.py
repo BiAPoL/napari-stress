@@ -53,7 +53,7 @@ def test_surf_utils():
 
 def test_decorator(make_napari_viewer):
     from napari_stress import reconstruct_surface
-    from napari_stress import list_of_points_to_points
+    from napari_stress._utils import list_of_points_to_points
     from vedo import Sphere
 
     viewer = make_napari_viewer()
