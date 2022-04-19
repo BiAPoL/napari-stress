@@ -166,7 +166,7 @@ def list_of_layerdatatuple_to_layerdatatuple(tuple_data: list) -> LayerDataTuple
         _result[2] = dtype
         results[idx] = _result
 
-    return _result
+    return results
 
 
 def list_of_points_to_points(points: list) -> np.ndarray:
