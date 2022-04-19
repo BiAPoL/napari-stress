@@ -85,7 +85,7 @@ def _func_args_to_list(func: callable) -> list:
     sig = inspect.signature(func)
     return list(sig.parameters.keys())
 
-def frame_by_frame(function, progress_bar: bool = False):
+def frame_by_frame(function, progress_bar: bool = True):
 
     @wraps(function)
     def wrapper(*args, **kwargs):
@@ -130,7 +130,13 @@ def frame_by_frame(function, progress_bar: bool = False):
         # apply function frame by frame
         #TODO: Put this in a thread by default?
         results = [None] * n_frames
-        it = tqdm.tqdm(range(n_frames)) if progress_bar else range(n_frames)
+
+        # Put some info in the progress bar if selected
+        if progress_bar:
+            it = tqdm.tqdm(range(n_frames), desc = 'Running ' + function.__name__)
+        else:
+            it = range(n_frames)
+
         for t in it:
             _args = args.copy()
 
