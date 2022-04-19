@@ -143,7 +143,9 @@ def frame_by_frame(function, progress_bar: bool = False):
         return funcs_list_to_data[sig.return_annotation](results)
     return wrapper
 
-def list_of_layerdatatuple_to_layerdatatuple(tuple_data: list) -> LayerDataTuple:
+def list_of_layerdatatuple_to_layerdatatuple(tuple_data: list
+                                             ) -> LayerDataTuple:
+    """Convert a list of 3D layerdatatuple objects to a single 4D LayerDataTuple"""
 
     # Possible conversion functions for layerdatatuples
     funcs_list_to_data = {
@@ -170,6 +172,7 @@ def list_of_layerdatatuple_to_layerdatatuple(tuple_data: list) -> LayerDataTuple
 
 
 def list_of_points_to_points(points: list) -> np.ndarray:
+    """Convert list of 3D point data to single 4D point data."""
 
     n_points = sum([len(frame) for frame in points])
     t = np.concatenate([[idx] * len(frame) for idx, frame in enumerate(points)])
@@ -222,21 +225,12 @@ def surface_to_list_of_surfaces(surface: SurfaceData) -> list:
     return surfaces
 
 def list_of_images_to_image(images: list) -> ImageData:
+    """Convert a list of 3D image data to single 4D image data."""
     return np.stack(images)
 
 def list_of_surfaces_to_surface(surfs: list) -> tuple:
     """
-    Convert vedo surface object to napari-diggestable data format.
-
-    Parameters
-    ----------
-    surfs : typing.Union[vedo.mesh.Mesh, list]
-        DESCRIPTION.
-
-    Returns
-    -------
-    None.
-
+    Convert list of 3D surfaces to single 4D surface.
     """
     if isinstance(surfs[0], vedo.mesh.Mesh):
         surfs = [(s.points(), s.faces()) for s in surfs]
