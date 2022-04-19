@@ -181,8 +181,8 @@ def _fancy_edge_fit(profile: np.ndarray,
             if profile[0] > profile[-1]:
                 profile = profile[::-1]
 
-            p0 = [max(profile),
-                  len(profile/2),
+            p0 = [len(profile/2),
+                  max(profile),
                   np.diff(profile).mean(),
                   min(profile)]
             popt, _pcov = curve_fit(
