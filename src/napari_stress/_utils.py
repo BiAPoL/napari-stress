@@ -2,7 +2,8 @@ import numpy as np
 import vedo
 
 import napari
-from napari.types import PointsData, SurfaceData, ImageData, LabelsData
+from napari.types import PointsData, SurfaceData, ImageData, LabelsData, LayerDataTuple
+from typing import List
 import inspect
 
 from functools import wraps
@@ -90,8 +91,9 @@ def frame_by_frame(function, progress_bar: bool = False):
     def wrapper(*args, **kwargs):
 
         sig = inspect.signature(function)
-        annotations = [sig.parameters[key].annotation for key in sig.parameters.keys()]
-        return_annotation = sig.return_annotation
+        annotations = [
+            sig.parameters[key].annotation for key in sig.parameters.keys()
+            ]
 
         # Dictionary of functions that can convert 4D to list of data
         funcs_data_to_list = {
@@ -101,11 +103,13 @@ def frame_by_frame(function, progress_bar: bool = False):
             napari.types.LabelsData: image_to_list_of_images
             }
 
+        # DIctionary of functions that can convert lists of data to data
         funcs_list_to_data = {
             napari.types.PointsData: list_of_points_to_points,
             napari.types.SurfaceData: list_of_surfaces_to_surface,
             napari.types.ImageData: list_of_images_to_image,
-            napari.types.LabelsData: list_of_images_to_image
+            napari.types.LabelsData: list_of_images_to_image,
+            List[napari.types.LayerDataTuple]: list_of_layerdatatuple_to_layerdatatuple
             }
 
         supported_data = [ImageData, PointsData, SurfaceData, LabelsData]
@@ -136,18 +140,34 @@ def frame_by_frame(function, progress_bar: bool = False):
 
             results[t] = function(*_args, **kwargs)
 
-        if return_annotation is tuple:
-            ...
-
-        # Turn results into an array with dimension [result, T, data]
-        _results = np.array(results)
-
-        list_of_results = []
-        for i, ret_ann in enumerate(return_annotation):
-            list_of_results.append(funcs_list_to_data[ret_ann](results[:, i]))
-
-        return
+        return funcs_list_to_data[sig.return_annotation](results)
     return wrapper
+
+def list_of_layerdatatuple_to_layerdatatuple(tuple_data: list) -> LayerDataTuple:
+
+    # Possible conversion functions for layerdatatuples
+    funcs_list_to_data = {
+        'points': list_of_points_to_points,
+        'surface': list_of_surfaces_to_surface,
+        'image': list_of_images_to_image,
+        'labels': list_of_images_to_image,
+        }
+
+    # Convert data to array with dimensions [result, frame, data]
+    data = list(np.asarray(tuple_data).transpose((1, 0, -1)))
+
+    # Reminder: Each list entry is tuple (data, properties, type)
+    results = [None] * len(data)  # allocate list for results
+    for idx, res in enumerate(data):
+        dtype = res[0, -1]
+        _result = [None] * 3
+        _result[0] = funcs_list_to_data[dtype](res[:, 0])
+        _result[1] = res[0, 1]  # smarter way to combine properties?
+        _result[2] = dtype
+        results[idx] = _result
+
+    return _result
+
 
 def list_of_points_to_points(points: list) -> np.ndarray:
 
