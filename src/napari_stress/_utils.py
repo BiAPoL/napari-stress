@@ -6,6 +6,7 @@ from napari.types import PointsData, SurfaceData, ImageData, LabelsData
 import inspect
 
 from functools import wraps
+from itertools import chain
 import tqdm
 
 def pointcloud_to_vertices4D(surfs: list) -> np.ndarray:
@@ -90,6 +91,7 @@ def frame_by_frame(function, progress_bar: bool = False):
 
         sig = inspect.signature(function)
         annotations = [sig.parameters[key].annotation for key in sig.parameters.keys()]
+        return_annotation = sig.return_annotation
 
         # Dictionary of functions that can convert 4D to list of data
         funcs_data_to_list = {
@@ -134,7 +136,17 @@ def frame_by_frame(function, progress_bar: bool = False):
 
             results[t] = function(*_args, **kwargs)
 
-        return funcs_list_to_data[sig.return_annotation](results)
+        if return_annotation is tuple:
+            ...
+
+        # Turn results into an array with dimension [result, T, data]
+        _results = np.array(results)
+
+        list_of_results = []
+        for i, ret_ann in enumerate(return_annotation):
+            list_of_results.append(funcs_list_to_data[ret_ann](results[:, i]))
+
+        return
     return wrapper
 
 def list_of_points_to_points(points: list) -> np.ndarray:
