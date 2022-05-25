@@ -4,6 +4,7 @@ import numpy as np
 import napari_process_points_and_surfaces as nppas
 from napari.types import LabelsData, SurfaceData, PointsData
 from napari_stress._utils.frame_by_frame import frame_by_frame
+from ._utils.surface_utils import fibonacci_sphere
 
 import vedo
 import typing
@@ -12,7 +13,8 @@ import pyshtools
 
 @frame_by_frame
 def fit_spherical_harmonics(points: PointsData,
-                            max_degree: int) -> PointsData:
+                            max_degree: int,
+                            n_points: int = 0) -> PointsData:
     """
     Approximate a surface by spherical harmonics expansion
 
@@ -46,6 +48,10 @@ def fit_spherical_harmonics(points: PointsData,
     # Find spherical harmonics expansion coefficients until specified degree
     opt_fit_params = pyshtools._SHTOOLS.SHExpandLSQ(radius, latitude, longitude,
                                                     lmax = max_degree)[1]
+
+    if n_points > 0:
+        latitude, longitude = fibonacci_sphere(n_points)
+
     # Sample radius values at specified latitude/longitude
     clm = pyshtools.SHCoeffs.from_array(opt_fit_params)
     values = clm.expand(lat=latitude, lon=longitude)
