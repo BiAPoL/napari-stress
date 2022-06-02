@@ -15,6 +15,11 @@ import pandas as pd
 
 from enum import Enum
 
+import matplotlib.pyplot as plt
+
+import warnings
+warnings.filterwarnings('ignore')
+
 class fit_types(Enum):
     quick_edge_fit = 'quick'
     fancy_edge_fit = 'fancy'
