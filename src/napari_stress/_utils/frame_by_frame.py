@@ -175,15 +175,14 @@ class TimelapseConverter:
 
         # Reminder: Each list entry is tuple (data, properties, type)
         results = [None] * len(data)  # allocate list for results
-        for idx, res in enumerate(data):
-            dtype = res[0, -1]
-            _result = [None] * 3
-            _result[0] = self.list_to_data_conversion_functions[layertype](res[:, 0])
-            _result[1] = res[0, 1]  # smarter way to combine properties?
-            _result[2] = dtype
-            results[idx] = _result
 
-        return results
+        dtype = data[0, -1]
+        result = [None] * 3
+        result[0] = self.list_to_data_conversion_functions[layertype]([x for x in data[:, 0]])
+        result[1] = _properties
+        result[2] = dtype
+
+        return tuple(result)
 
     def stack_dict(self, dictionaries: list) -> dict:
         _dictionary = {}
@@ -196,7 +195,7 @@ class TimelapseConverter:
                 continue
 
             if hasattr(dictionaries[-1][key], '__len__'):
-                _dictionary[key] = np.concatenate([frame[key] for frame in dictionaries])
+                _dictionary[key] = np.concatenate([frame[key] for frame in dictionaries]).squeeze()
             else:
                 _dictionary[key] = dictionaries[-1][key]
         return _dictionary
@@ -292,13 +291,16 @@ class TimelapseConverter:
 
     def _list_of_points_to_points(self, points: list) -> np.ndarray:
         """Convert list of 3D point data to single 4D point data."""
-
+        n_frames = len(points)
         n_points = sum([len(frame) for frame in points])
-        t = np.concatenate([[idx] * len(frame) for idx, frame in enumerate(points)])
+        if n_frames > 1: # actually a timelapse
+            t = np.concatenate([[idx] * len(frame) for idx, frame in enumerate(points)])
 
-        points_out = np.zeros((n_points, 4))
-        points_out[:, 1:] = np.vstack(points)
-        points_out[:, 0] = t
+            points_out = np.zeros((n_points, 4))
+            points_out[:, 1:] = np.vstack(points)
+            points_out[:, 0] = t
+        else:
+            points_out = np.vstack(points)
 
         return points_out
 

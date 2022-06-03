@@ -32,8 +32,11 @@ def test_decorator_points():
     for pts, _pts in zip(points_list, points_list_conv):
         assert np.array_equal(points_list, points_list_conv)
 
+
 def test_decorator_surfaces():
-    from napari_stress import TimelapseConverter
+    from napari_stress import TimelapseConverter, frame_by_frame
+    from napari_process_points_and_surfaces import sample_points_poisson_disk
+    from napari.types import SurfaceData
     from vedo import Sphere
 
     Converter = TimelapseConverter()
@@ -47,6 +50,9 @@ def test_decorator_surfaces():
     for surf, _surf in zip(surface_list, surface_list_conv):
         assert np.array_equal(surf[0], _surf[0])
         assert np.array_equal(surf[1], _surf[1])
+
+    points = frame_by_frame(sample_points_poisson_disk)(surface_array)
+    points = frame_by_frame(sample_points_poisson_disk)(surface_list[0])
 
 def test_decorator_images():
 
@@ -64,3 +70,6 @@ def test_decorator_images():
     image_list_conv = Converter.list_of_data_to_data(image_array, ImageData)
     for img, _img in zip(image_list, image_list_conv):
         assert np.array_equiv(img, _img)
+
+if __name__ =='__main__':
+    test_decorator_surfaces()

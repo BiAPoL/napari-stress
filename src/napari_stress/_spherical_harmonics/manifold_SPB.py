@@ -9,7 +9,7 @@ import numpy as np
 import pickle as pkl
 import os, sys
 
-from .._spherical_harmonics import sph_func_SPB as sph_f
+from . import sph_func_SPB as sph_f
 
 MY_DIR  = os.path.realpath(os.path.dirname(__file__)) #current folder
 PICKLE_Manny_DIR = os.path.join(MY_DIR, 'Pickled_Manny_Inv_Mat_Files') #subfolder of manny_inv_matrix pickled files
@@ -470,9 +470,9 @@ class manifold(object): #This now represents geo of S^2, will later be adapted t
 
 		# BJG: otherwise, we use input lebedev quad pts, in our shape dictionary:
 		else:
-			self.X_A_Pts = self.Man_Shape_Dict['X_lbdv_pts']
-			self.Y_A_Pts = self.Man_Shape_Dict['Y_lbdv_pts']
-			self.Z_A_Pts = self.Man_Shape_Dict['Z_lbdv_pts']
+			self.X_A_Pts = self.Man_Shape_Dict['coordinates'][:, 0]
+			self.Y_A_Pts = self.Man_Shape_Dict['coordinates'][:, 1]
+			self.Z_A_Pts = self.Man_Shape_Dict['coordinates'][:, 2]
 
 			#print("self.X_A_Pts.shape = "+str(self.X_A_Pts.shape))
 
@@ -481,9 +481,9 @@ class manifold(object): #This now represents geo of S^2, will later be adapted t
 		self.quad_pts = range(self.num_quad_pts) # list of quad pts, for vectorization:
 		quad_pts_inv_rot = lbdv.Eval_Inv_Rot_Lbdv_Quad_vals(self.quad_pts) #lbdv.Eval_Rot_Lbdv_Quad_vals(quad_pts)
 
-		self.X_B_Pts = self.X_A_Pts[quad_pts_inv_rot, :] #self.Z_A_Pts
-		self.Y_B_Pts = self.Y_A_Pts[quad_pts_inv_rot, :] #self.Y_A_Pts
-		self.Z_B_Pts = self.Z_A_Pts[quad_pts_inv_rot, :] #-1.*self.X_A_Pts
+		self.X_B_Pts = self.X_A_Pts[quad_pts_inv_rot] #self.Z_A_Pts
+		self.Y_B_Pts = self.Y_A_Pts[quad_pts_inv_rot] #self.Y_A_Pts
+		self.Z_B_Pts = self.Z_A_Pts[quad_pts_inv_rot] #-1.*self.X_A_Pts
 
 		self.Cart_Coors_A = np.hstack(( self.X_A_Pts, self.Y_A_Pts, self.Z_A_Pts )) # Cart Coors uses these
 		self.Cart_Coors_B = np.hstack(( self.X_B_Pts, self.Y_B_Pts, self.Z_B_Pts ))

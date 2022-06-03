@@ -18,20 +18,36 @@ contributions:
       python_name: napari_stress._sample_data:get_dropplet_point_cloud
       title: Get dropplet pointcloud sample
 
+    - id: napari-stress.fit_spherical_harmonics
+      python_name: napari_stress._spherical_harmonics.expansion:fit_spherical_harmonics
+      title: Approximate point cloud by spherical harmonics expansion
+
+    - id: napari-stress.measure_curvature
+      python_name: napari_stress._spherical_harmonics.curvature:measure_curvature
+      title: Measure spherical-harmonics approximated curvature
+
 
   widgets:
     - command: napari-stress.rescale
       autogenerate: true
       display_name: Rescale image data
+
+    - command: napari-stress.measure_curvature
+      autogenerate: True
+      display_name: Measure curvature
+
     - command: napari-stress.trace_refine_surface
       autogenerate: true
       display_name: Trace-refine surface points
+
     - command: napari-stress.fit_spherical_harmonics
       autogenerate: true
       display_name: Fit spherical harmonics
+
     - command: napari-stress.reconstruct_surface
       autogenerate: true
       display_name: Reconstruct surface
+      
     - command: napari-stress.extract_vertex_points
       autogenerate: true
       display_name: Surface vertices to points

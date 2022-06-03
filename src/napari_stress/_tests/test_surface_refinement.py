@@ -26,7 +26,7 @@ def test_surface_tracing(make_napari_viewer):
                                                 sampling_distance=1.0,
                                                 selected_fit_type=fit_type,
                                                 remove_outliers=False)
-    radial_vectors = np.array([50, 50, 50])[None, :] - traced_points[:, 1:]
+    radial_vectors = np.array([50, 50, 50])[None, :] - traced_points
     mean_radii = np.linalg.norm(radial_vectors, axis=1).mean()
 
     assert np.allclose(true_radius, mean_radii, atol=1)
@@ -36,7 +36,7 @@ def test_surface_tracing(make_napari_viewer):
                                                 trace_length=10,
                                                 selected_fit_type=fit_type,
                                                 remove_outliers=False)
-    radial_vectors = np.array([50, 50, 50])[None, :] - traced_points[:, 1:]
+    radial_vectors = np.array([50, 50, 50])[None, :] - traced_points
     mean_radii = np.linalg.norm(radial_vectors, axis=1).mean()
 
     assert np.allclose(true_radius, mean_radii, atol=1)
@@ -70,3 +70,7 @@ def test_surface_tracing(make_napari_viewer):
                                                 selected_fit_type=fit_type,
                                                 selected_edge='surface',
                                                 remove_outliers=False)
+
+if __name__ == '__main__':
+    import napari
+    test_surface_tracing(napari.Viewer)

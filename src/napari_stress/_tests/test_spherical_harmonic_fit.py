@@ -10,23 +10,16 @@ def test_spherical_harmonics():
     # Test pyshtools implementation
     points = napari_stress.fit_spherical_harmonics(ellipse.points(), max_degree=3,
                                                    implementation='shtools')
-    assert np.array_equal(ellipse.points().shape, points[:, 1:].shape)
+    assert np.array_equal(ellipse.points().shape, points.shape)
 
     # Test stress implementation
     points = napari_stress.fit_spherical_harmonics(ellipse.points(), max_degree=3,
                                                    implementation='stress')
-    assert np.array_equal(ellipse.points().shape, points[:, 1:].shape)
+    assert np.array_equal(ellipse.points().shape, points.shape)
 
     # Test default implementations
     points = napari_stress.fit_spherical_harmonics(ellipse.points(), max_degree=3)
     assert np.array_equal(ellipse.points().shape, points[:, 1:].shape)
-
-def test_stress_spherical_harmonics():
-
-    from napari_stress._spherical_harmonics._expansion import stress_spherical_harmonics_expansion
-    from napari_stress._spherical_harmonics.sph_func_SPB import spherical_harmonics_function
-
-    ellipse = vedo.shapes.Ellipsoid()
 
     degree = 5
     points, coefficients = stress_spherical_harmonics_expansion(ellipse.points(),
@@ -40,5 +33,17 @@ def test_stress_spherical_harmonics():
     delta_phi_phi = function_x.Eval_SPH_Der_Phi_Phi(1, 1)
     derivative1 = function_x.Eval_SPH_Der_Phi(1, 1)
 
+def test_quadrature(make_napari_viewer):
+    points = napari_stress.get_dropplet_point_cloud()[0]
+
+    lebedev_points = napari_stress.measure_curvature(points[0])
+
+    viewer = make_napari_viewer()
+    lebedev_points = napari_stress.measure_curvature(points[0], viewer=viewer)
+    lebedev_points = napari_stress.measure_curvature(points[0],
+                                                    use_minimal_point_set=True,
+                                                    number_of_quadrature_points=50)
+
 if __name__ == '__main__':
     test_stress_spherical_harmonics()
+    assert np.array_equal(ellipse.points().shape, points.shape)

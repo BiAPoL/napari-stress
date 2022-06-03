@@ -2,7 +2,7 @@ import numpy as np
 import inspect
 from napari.types import  PointsData
 
-from .._spherical_harmonics import lbdv_info_SPB as lbdv_i
+from .._spherical_harmonics import lebedev_info_SPB as lebedev_info
 
 def _sigmoid(array: np.ndarray, center:float, amplitude:float, slope:float, offset:float):
     """
@@ -50,7 +50,7 @@ def Least_Squares_Harmonic_Fit(fit_degree: int,
     for n in range(fit_degree + 1):
         for m in range(-1*n, n+1):
             Y_mn_coors_in = []
-            Y_mn_coors_in = lbdv_i.Eval_SPH_Basis(m, n, U, V)
+            Y_mn_coors_in = lebedev_info.Eval_SPH_Basis(m, n, U, V)
             All_Y_mn_pt_in.append(Y_mn_coors_in)
 
     All_Y_mn_pt_in_mat = np.hstack(( All_Y_mn_pt_in ))

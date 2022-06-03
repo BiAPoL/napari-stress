@@ -1,5 +1,5 @@
 # From https://github.com/campaslab/STRESS
-#! We use sph_func to encapsulate data from SPH Basis of functions, regardless of chart
+#! We use spherical_harmonics_function to encapsulate data from SPH Basis of functions, regardless of chart
 
 from numpy  import *
 import numpy as np
@@ -8,7 +8,7 @@ import mpmath
 import cmath
 from scipy.special import sph_harm
 
-from .lbdv_info_SPB import *
+from .lebedev_info_SPB import *
 from .charts_SPB import*
 
 
@@ -45,8 +45,7 @@ def Create_Basis_Fn(m, n, basis_degree):
     else: # If m<0
         Coef_Mat[n][n-(-1*m)] = 1.
 
-    return sph_func(Coef_Mat, basis_degree)
-
+    return spherical_harmonics_function(Coef_Mat, basis_degree)
 
 
 #Approximate func(theta, phi) in FE space
@@ -77,7 +76,7 @@ def Proj_Func(func, SPH_Deg, lbdv):
                          Proj_Coef[n][n+m] = Proj_Coef_mn
 
 
-    return sph_func(Proj_Coef, SPH_Deg)
+    return spherical_harmonics_function(Proj_Coef, SPH_Deg)
 
 
 # Projects function into both charts
@@ -132,7 +131,7 @@ def Proj_Into_SPH_Charts_At_Quad_Pts(func_quad_vals, Proj_Deg, lbdv):
 #TAKES VALS AT QUAD PTS, to Approximate func(theta, phi) in SPH Basis
 def Faster_Double_Proj(func_quad_vals, Proj_Deg, lbdv):
 
-    Proj_Coef = zeros([Proj_Deg+1, Proj_Deg+1]) #Size of basis used to represent derivative
+    Proj_Coef = np.zeros([Proj_Deg+1, Proj_Deg+1]) #Size of basis used to represent derivative
 
     #Compute inner product of theta der with each basis elt
     for n in range(Proj_Deg+1):
@@ -156,7 +155,7 @@ def Faster_Double_Proj(func_quad_vals, Proj_Deg, lbdv):
             else: #m <= 0
                     Proj_Coef[n][n+m] = Proj_mn
 
-    return sph_func(Proj_Coef, Proj_Deg)
+    return spherical_harmonics_function(Proj_Coef, Proj_Deg)
 
 
 #TAKES VALS AT QUAD PTS, to Approximate func(theta, phi)*Coef_Mat(theta, phi) in SPH Basis
@@ -188,7 +187,7 @@ def Faster_Double_Proj_Product(func1_quad_vals, func2_quad_vals, Proj_Deg, lbdv)
                     Proj_Product_Coef[n][n+m] = Proj_Product_mn
 
 
-    return sph_func(Proj_Product_Coef, Proj_Deg)
+    return spherical_harmonics_function(Proj_Product_Coef, Proj_Deg)
 
 
 # Inputs quad vals for f, f_approx, integrates on SPHERE:
@@ -431,7 +430,7 @@ class spherical_harmonics_function(object): #create class for Spherical Harmonic
                 # D_theta Z^m_n = m*X^m_n
                 Der_Coef[n_coef][n_coef-m_coef] = -1*m_coef*self.sph_coef[n_coef-m_coef][n_coef]
 
-        return sph_func(Der_Coef, self.sph_deg)
+        return spherical_harmonics_function(Der_Coef, self.sph_deg)
 
     def Quick_Theta_Bar_Der(self): #For rotated coordinate frame
         return self.Quick_Theta_Der()
@@ -465,7 +464,7 @@ class spherical_harmonics_function(object): #create class for Spherical Harmonic
                 else: #m <= 0
                     Proj_Product_Coef[n][n+m] = Proj_Product_mn
 
-        return sph_func(Proj_Product_Coef, Proj_Deg)
+        return spherical_harmonics_function(Proj_Product_Coef, Proj_Deg)
 
 
     #TAKES VALS AT QUAD PTS, to Approximate func(theta, phi)*Coef_Mat(theta, phi) in SPH Basis
@@ -497,10 +496,10 @@ class spherical_harmonics_function(object): #create class for Spherical Harmonic
                     Proj_Product_Coef[n][n+m] = Proj_Product_mn
 
 
-        return sph_func(Proj_Product_Coef, Proj_Deg)
+        return spherical_harmonics_function(Proj_Product_Coef, Proj_Deg)
 
     #Approximate Coef_Mat2(theta, phi)*Coef_Mat(theta, phi) in SPH Basis
-    def Fast_Proj_Product_SPH(self, SPH_Func2, Proj_Deg, lbdv):
+    def Fast_Proj_Product_SPH(self, spherical_harmonics_function2, Proj_Deg, lbdv):
 
 
         Proj_Product_Coef = zeros([Proj_Deg+1, Proj_Deg+1]) #Size of basis used to represent derivative
@@ -528,7 +527,7 @@ class spherical_harmonics_function(object): #create class for Spherical Harmonic
                     Proj_Product_Coef[n][n+m] = Proj_Product_mn
 
 
-        return sph_func(Proj_Product_Coef, Proj_Deg)
+        return spherical_harmonics_function(Proj_Product_Coef, Proj_Deg)
 
 
     def Inner_Product_SPH(self, Other_SPH):
@@ -616,16 +615,16 @@ class spherical_harmonics_function(object): #create class for Spherical Harmonic
 
     # Take sum of SPH function of same order
     def plus_sph(self, other_SPH):
-        return sph_func(self.sph_coef +other_SPH.sph_coef , self.sph_deg)
+        return spherical_harmonics_function(self.sph_coef +other_SPH.sph_coef , self.sph_deg)
 
     # Take difference of SPH function of same order
     def minus_sph(self, other_SPH):
-        return sph_func(self.sph_coef -other_SPH.sph_coef , self.sph_deg)
+        return spherical_harmonics_function(self.sph_coef -other_SPH.sph_coef , self.sph_deg)
 
     # Multiplies SPH function by a const
     def sph_times(self, const):
-        return sph_func(self.sph_coef*const, self.sph_deg)
+        return spherical_harmonics_function(self.sph_coef*const, self.sph_deg)
 
     #Easier way to debug these objects
-    def print_sph_func(self):
-        print("sph_func has degree: "+str(self.sph_deg)+" and has coef mat: "+"\n"+str(self.sph_coef))
+    def print_spherical_harmonics_function(self):
+        print("spherical_harmonics_function has degree: "+str(self.sph_deg)+" and has coef mat: "+"\n"+str(self.sph_coef))

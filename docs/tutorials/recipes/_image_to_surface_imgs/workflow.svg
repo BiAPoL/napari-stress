@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04, custom)"
+   sodipodi:docname="workflow.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="0.092537353"
+     inkscape:cx="918.548"
+     inkscape:cy="-1042.8221"
+     inkscape:window-width="1920"
+     inkscape:window-height="1018"
+     inkscape:window-x="-6"
+     inkscape:window-y="-6"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid1044" />
+  </sodipodi:namedview>
+  <defs
+     id="defs2">
+    <marker
+       style="overflow:visible;"
+       id="Arrow2Send"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow2Send"
+       inkscape:isstock="true">
+      <path
+         transform="scale(0.3) rotate(180) translate(-2.3,0)"
+         d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
+         style="stroke:context-stroke;fill-rule:evenodd;fill:context-stroke;stroke-width:0.62500000;stroke-linejoin:round;"
+         id="path1161" />
+    </marker>
+    <marker
+       style="overflow:visible;"
+       id="Arrow1Send"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow1Send"
+       inkscape:isstock="true">
+      <path
+         transform="scale(0.2) rotate(180) translate(6,0)"
+         style="fill-rule:evenodd;fill:context-stroke;stroke:context-stroke;stroke-width:1.0pt;"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         id="path1143" />
+    </marker>
+    <marker
+       style="overflow:visible;"
+       id="Arrow1Mend"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow1Mend"
+       inkscape:isstock="true">
+      <path
+         transform="scale(0.4) rotate(180) translate(10,0)"
+         style="fill-rule:evenodd;fill:context-stroke;stroke:context-stroke;stroke-width:1.0pt;"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         id="path1137" />
+    </marker>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath999">
+      <rect
+         style="fill:#ffa200;stroke:#ff0000;stroke-width:3.165;stroke-linecap:square"
+         id="rect1001"
+         width="385.05432"
+         height="489.47916"
+         x="-531.34302"
+         y="-363.39664" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath1003">
+      <rect
+         style="fill:#ffa200;stroke:#ff0000;stroke-width:3.165;stroke-linecap:square"
+         id="rect1005"
+         width="385.05432"
+         height="489.47916"
+         x="59.082966"
+         y="4.0113201" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath1007">
+      <rect
+         style="fill:#ffa200;stroke:#ff0000;stroke-width:3.165;stroke-linecap:square"
+         id="rect1009"
+         width="385.05432"
+         height="489.47916"
+         x="371.58829"
+         y="-175.85593" />
+    </clipPath>
+    <marker
+       style="overflow:visible"
+       id="Arrow2Send-2"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow2Send"
+       inkscape:isstock="true">
+      <path
+         transform="matrix(-0.3,0,0,-0.3,0.69,0)"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:0.625;stroke-linejoin:round"
+         id="path1161-5" />
+    </marker>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath18276">
+      <rect
+         style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:16.165;stroke-linecap:square;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect18278"
+         width="385.05432"
+         height="489.47916"
+         x="-42.418831"
+         y="81.209862" />
+    </clipPath>
+    <marker
+       style="overflow:visible"
+       id="Arrow2Send-2-5"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow2Send"
+       inkscape:isstock="true">
+      <path
+         transform="matrix(-0.3,0,0,-0.3,0.69,0)"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:0.625;stroke-linejoin:round"
+         id="path1161-5-6" />
+    </marker>
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <image
+       width="1016"
+       height="546.62915"
+       preserveAspectRatio="none"
+       xlink:href="recipe_image_to_surface6.png"
+       id="image14788"
+       x="-320.72202"
+       y="49.775677"
+       clip-path="url(#clipPath18276)"
+       transform="translate(281.18447,-444.6065)" />
+    <image
+       width="862.54169"
+       height="489.47916"
+       preserveAspectRatio="none"
+       xlink:href="recipe_image_to_surface.png"
+       id="image832"
+       x="-737.20587"
+       y="-363.39664"
+       clip-path="url(#clipPath999)" />
+    <image
+       width="1016"
+       height="546.62915"
+       preserveAspectRatio="none"
+       xlink:href="recipe_image_to_surface10.png"
+       id="image844"
+       x="122.45487"
+       y="-208.98245"
+       clip-path="url(#clipPath1007)"
+       transform="translate(252.23168,-187.54071)" />
+    <image
+       width="1016"
+       height="546.62915"
+       preserveAspectRatio="none"
+       xlink:href="recipe_image_to_surface3.png"
+       id="image856"
+       x="-172.04332"
+       y="-18.845259"
+       clip-path="url(#clipPath1003)"
+       transform="translate(-205.37166,-367.40796)" />
+    <path
+       style="fill:none;stroke:#ffffff;stroke-width:16.165;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow2Send)"
+       d="m -216.23285,-133.19356 h 105.83334"
+       id="path1046" />
+    <path
+       style="fill:none;stroke:#ffffff;stroke-width:16.165;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow2Send-2)"
+       d="M 173.37974,-133.19356 H 279.21308"
+       id="path1046-1" />
+    <path
+       style="fill:none;stroke:#ffffff;stroke-width:16.165;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow2Send-2-5)"
+       d="M 562.99236,-133.19356 H 668.8257"
+       id="path1046-1-2" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="-445.97235"
+       y="-310.85794"
+       id="text3106"><tspan
+         sodipodi:role="line"
+         id="tspan3104"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:31.75px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:1;stroke-width:0.264583"
+         x="-445.97235"
+         y="-310.85794">Raw droplet</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="-102.79099"
+       y="-310.85794"
+       id="text3106-0"><tspan
+         sodipodi:role="line"
+         id="tspan3104-1"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:31.75px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:1;stroke-width:0.264583"
+         x="-102.79099"
+         y="-310.85794">Rescaled droplet</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="276.737"
+       y="-310.85794"
+       id="text3106-7"><tspan
+         sodipodi:role="line"
+         id="tspan3104-5"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:31.75px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:1;stroke-width:0.264583"
+         x="276.737"
+         y="-310.85794">Binarized droplet</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="747.47644"
+       y="-307.82715"
+       id="text3106-7-9"><tspan
+         sodipodi:role="line"
+         id="tspan3104-5-8"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:31.75px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:1;stroke-width:0.264583"
+         x="747.47644"
+         y="-307.82715">Surface</tspan></text>
+  </g>
+</svg>

@@ -4,6 +4,7 @@ import numpy as np
 import napari_process_points_and_surfaces as nppas
 from napari.types import LabelsData, SurfaceData, PointsData
 from napari_stress._utils.frame_by_frame import frame_by_frame
+from napari_tools_menu import register_function
 
 import vedo
 import typing
@@ -58,6 +59,8 @@ def extract_vertex_points(surface: SurfaceData) -> PointsData:
     """
     return surface[0]
 
+
+@register_function(menu="Surfaces > Smoothing (Windowed Sinc, vedo, n-STRESS)")
 @frame_by_frame
 def smooth_sinc(surface: SurfaceData,
                 niter: int = 15,
@@ -72,6 +75,7 @@ def smooth_sinc(surface: SurfaceData,
                 boundary=boundary)
     return (mesh.points(), np.asarray(mesh.faces(), dtype=int))
 
+@register_function(menu="Surfaces > Smoothing (MLS2D, vedo, n-STRESS)")
 @frame_by_frame
 def smoothMLS2D(points: PointsData,
                 factor: float = 0.5,
@@ -85,6 +89,7 @@ def smoothMLS2D(points: PointsData,
     else:
         return pointcloud.points()
 
+@register_function(menu="Surfaces > Simplify (decimate, vedo, n-STRESS)")
 @frame_by_frame
 def decimate(surface: SurfaceData,
              fraction: float = 0.1) -> SurfaceData:
@@ -101,9 +106,10 @@ def decimate(surface: SurfaceData,
     return (mesh.points(), np.asarray(mesh.faces()))
 
 
+@register_function(menu="Surfaces > Surface density adjustment (vedo, n-STRESS)")
 @frame_by_frame
 def adjust_surface_density(surface: SurfaceData,
-                           density_target: float) -> SurfaceData:
+                           density_target: float = 1.0) -> SurfaceData:
     """Adjust the number of vertices of a surface to a defined density"""
     import open3d
 

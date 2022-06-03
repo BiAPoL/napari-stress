@@ -8,8 +8,8 @@ from scipy.spatial.transform import Rotation
 import vedo
 
 from .._spherical_harmonics import sph_func_SPB as sph_f
-from .._spherical_harmonics import lbdv_info_SPB as lbdv_i
-from .._spherical_harmonics import euc_k_form_SPB as euc_kf
+from .._spherical_harmonics import lebedev_info_SPB as lbdv_i
+from .._spherical_harmonics import euclidian_k_form_SPB as euc_kf
 from .._spherical_harmonics import manifold_SPB as mnfd
 
 
