@@ -6,6 +6,8 @@ from napari.types import ImageData, PointsData
 from ._utils.fit_utils import _sigmoid, _gaussian, _function_args_to_list, _detect_max_gradient, _detect_maxima
 from ._utils.frame_by_frame import frame_by_frame
 
+from napari_tools_menu import register_function
+
 from scipy.interpolate import RegularGridInterpolator
 from scipy.optimize import curve_fit
 
@@ -26,6 +28,7 @@ class edge_functions(Enum):
     interior = {'fancy': _sigmoid, 'quick': _detect_max_gradient}
     surface = {'fancy': _gaussian, 'quick': _detect_maxima}
 
+@register_function(menu="Points > Trace-refine points on surface (n-STRESS)")
 @frame_by_frame
 def trace_refinement_of_surface(intensity_image: ImageData,
                                 points: PointsData,
