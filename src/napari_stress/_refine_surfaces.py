@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import vedo
-from napari.types import SurfaceData, ImageData, PointsData
+from napari.types import ImageData, PointsData
 
 from ._utils.fit_utils import _sigmoid, _gaussian, _function_args_to_list, _detect_max_gradient, _detect_maxima
 from ._utils.frame_by_frame import frame_by_frame
@@ -14,8 +14,6 @@ import tqdm
 import pandas as pd
 
 from enum import Enum
-
-import matplotlib.pyplot as plt
 
 import warnings
 warnings.filterwarnings('ignore')
