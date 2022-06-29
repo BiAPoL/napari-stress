@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from napari.types import LayerDataTuple, PointsData
-from napari.layers import Points
 import numpy as np
 from enum import Enum
 
@@ -9,11 +8,9 @@ from .toolbox import spherical_harmonics_toolbox
 from .spherical_harmonics import shtools_spherical_harmonics_expansion,\
     stress_spherical_harmonics_expansion,\
     lebedev_quadrature,\
-    create_manifold,\
     calculate_mean_curvature_on_manifold
 
 import napari
-import pathlib, os
 from napari_tools_menu import register_function
 
 
