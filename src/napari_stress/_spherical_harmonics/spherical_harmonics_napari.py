@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 from napari.types import LayerDataTuple, PointsData
+from napari.layers import Points
 import numpy as np
 from enum import Enum
 
 from .._utils.frame_by_frame import frame_by_frame
+from .toolbox import spherical_harmonics_toolbox
 from .spherical_harmonics import shtools_spherical_harmonics_expansion,\
     stress_spherical_harmonics_expansion,\
     lebedev_quadrature,\
@@ -11,6 +13,7 @@ from .spherical_harmonics import shtools_spherical_harmonics_expansion,\
     calculate_mean_curvature_on_manifold
 
 import napari
+import pathlib, os
 from napari_tools_menu import register_function
 
 
@@ -24,7 +27,8 @@ class spherical_harmonics_methods(Enum):
 @frame_by_frame
 def fit_spherical_harmonics(points: PointsData,
                             max_degree: int = 5,
-                            implementation: spherical_harmonics_methods = spherical_harmonics_methods.stress
+                            implementation: spherical_harmonics_methods = spherical_harmonics_methods.stress,
+                            run_analysis_toolbox: bool = True
                             ) -> LayerDataTuple:
     """
     Approximate a surface by spherical harmonics expansion.
@@ -74,7 +78,8 @@ def measure_curvature(points: PointsData,
                       implementation: spherical_harmonics_methods = spherical_harmonics_methods.stress,
                       number_of_quadrature_points: int = 500,
                       use_minimal_point_set: bool = False,
-                      viewer: napari.Viewer = None
+                      viewer: napari.Viewer = None,
+                      run_analysis_toolbox: bool = True
                       ) -> PointsData:
     """
     Measure curvature on pointcloud surface.
@@ -123,8 +128,13 @@ def measure_curvature(points: PointsData,
     if viewer is not None:
         if properties['name'] not in viewer.layers:
             viewer.add_points(lebedev_points, **properties)
+            layer = viewer.layers[properties['name']]
         else:
             layer = viewer.layers[properties['name']]
             layer.features = features
             layer.data = lebedev_points
+
+        if run_analysis_toolbox:
+            toolbox = spherical_harmonics_toolbox(viewer, layer)
+            viewer.window.add_dock_widget(toolbox)
     return lebedev_points

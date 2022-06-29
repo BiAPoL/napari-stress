@@ -21,6 +21,17 @@ def test_frontend_spherical_harmonics():
     points = napari_stress.fit_spherical_harmonics(ellipse.points(), max_degree=3)[0]
     assert np.array_equal(ellipse.points().shape, points.shape)
 
+def test_frontend_analysis_toolbox(make_napari_viewer):
+    from napari_stress import spherical_harmonics_toolbox, measure_curvature
+
+    viewer = make_napari_viewer()
+
+    points = napari_stress.get_droplet_point_cloud()[0]
+    viewer.add_points(points[0], **points[1])
+
+    measure_curvature(points[0][:, 1:], viewer=viewer, run_analysis_toolbox=True)
+
+
 def test_spherical_harmonics():
     from napari_stress._spherical_harmonics import spherical_harmonics as sh
 
@@ -47,4 +58,4 @@ def test_quadrature(make_napari_viewer):
 
 if __name__ == '__main__':
     import napari
-    test_quadrature(napari.Viewer)
+    test_frontend_analysis_toolbox(napari.Viewer)
