@@ -114,13 +114,17 @@ def test_analysis():
 
     ellipse_points = vedo.shapes.Ellipsoid().points()
 
-    pts, coeffs_pysh = sh.shtools_spherical_harmonics_expansion(ellipse_points)
-    pts, coeffs_stress = sh.stress_spherical_harmonics_expansion(ellipse_points)
+    degree = 10
+    pts, coeffs_pysh = sh.shtools_spherical_harmonics_expansion(ellipse_points, max_degree=degree)
+    pts, coeffs_stress = sh.stress_spherical_harmonics_expansion(ellipse_points, max_degree=degree)
 
     power_spectra_pysh = sh.calculate_power_spectrum(coeffs_pysh)
     power_spectra_stress = sh.calculate_power_spectrum(coeffs_stress)
 
+    assert len(power_spectra_pysh[0]) == degree +1
+    assert len(power_spectra_stress[0]) == degree +1
+
 
 if __name__ == '__main__':
     import napari
-    test_analysis()
+    test_frontend_analysis_toolbox(napari.Viewer)
