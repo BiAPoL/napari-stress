@@ -126,11 +126,12 @@ def calculate_power_spectrum(coefficients: list) ->np.ndarray:
 
     """
     # convert to list[SHCoeffs]
-    if isinstance(coefficients, pyshtools.SHCoeffs):
+    if not isinstance(coefficients[0], pyshtools.SHCoeffs):
+        coefficients = [sph_f.convert_coeffcients_stress_to_pyshtools(coeff) for coeff in coefficients]
 
 
     # Calculate spectra for each set of coefficients
-    power_spectra = [coeff.power_spectrum() for coeff in coefficients]
+    power_spectra = [coeff.spectrum() for coeff in coefficients]
     return power_spectra
 
 
