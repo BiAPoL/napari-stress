@@ -56,6 +56,18 @@ def test_quadrature(make_napari_viewer):
                                                     use_minimal_point_set=True,
                                                     number_of_quadrature_points=50)
 
+def test_analysis():
+    from napari_stress._spherical_harmonics import spherical_harmonics as sh
+
+    ellipse_points = vedo.shapes.Ellipsoid().points()
+
+    pts, coeffs_pysh = sh.shtools_spherical_harmonics_expansion(ellipse_points)
+    pts, coeffs_stress = sh.stress_spherical_harmonics_expansion(ellipse_points)
+
+    power_spectra_pysh = sh.calculate_power_spectrum(coeffs_pysh)
+    power_spectra_stress = sh.calculate_power_spectrum(coeffs_stress)
+
+
 if __name__ == '__main__':
     import napari
-    test_frontend_analysis_toolbox(napari.Viewer)
+    test_analysis()

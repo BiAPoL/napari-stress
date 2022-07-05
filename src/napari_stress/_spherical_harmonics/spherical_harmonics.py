@@ -7,7 +7,7 @@ functions (e.g., those functions that are visible to napari) in a separated plac
 """
 
 from napari.types import PointsData
-from typing import Tuple
+from typing import Tuple, Union
 import numpy as np
 import vedo
 import pyshtools
@@ -22,7 +22,7 @@ from . import lebedev_info_SPB as lebedev_info
 
 def shtools_spherical_harmonics_expansion(points: PointsData,
                                           max_degree: int = 5
-                                          ) -> Tuple[PointsData, np.ndarray]:
+                                          ) -> Tuple[PointsData, list]:
     """
     Approximate a surface by spherical harmonics expansion with pyshtools implementation.
 
@@ -62,7 +62,7 @@ def shtools_spherical_harmonics_expansion(points: PointsData,
                              spherical_coordinates[2]).transpose()
 
     points = points + center[np.newaxis, :]
-    return points, spherical_harmonics_coeffcients.to_array()
+    return points, [spherical_harmonics_coeffcients]
 
 def stress_spherical_harmonics_expansion(points: PointsData,
                                          max_degree: int = 5) -> Tuple[PointsData, np.ndarray]:
@@ -107,6 +107,32 @@ def stress_spherical_harmonics_expansion(points: PointsData,
     fitted_points = np.hstack((X_fit_sph_UV_pts, Y_fit_sph_UV_pts, Z_fit_sph_UV_pts ))
 
     return fitted_points, coefficients
+
+def calculate_power_spectrum(coefficients: list) ->np.ndarray:
+    """
+    Convert coefficients to pyshtools format and calculate power spectrum.
+
+    Parameters
+    ----------
+    coefficients : Union[np.ndarray, list]
+        Coefficients of spherial harmonics expansion as np.ndarray (stress-format)
+        or list of pyshtools.SHCoeffs
+
+    Returns
+    -------
+    power_spectra : list
+        list with power spectra for every expansion (i.e., if x/y/z are 
+        approximated separately)
+
+    """
+    # convert to list[SHCoeffs]
+    if isinstance(coefficients, pyshtools.SHCoeffs):
+
+
+    # Calculate spectra for each set of coefficients
+    power_spectra = [coeff.power_spectrum() for coeff in coefficients]
+    return power_spectra
+
 
 def lebedev_quadrature(coefficients: np.ndarray,
                        number_of_quadrature_points: int = 500,
