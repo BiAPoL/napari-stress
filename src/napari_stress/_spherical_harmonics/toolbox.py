@@ -29,6 +29,7 @@ class spherical_harmonics_toolbox(QWidget):
         self._first_time_setup()
 
         self.update_curvature_histogram()
+        self.update_power_spectrum()
 
         self._setup_callbacks()
 
@@ -60,9 +61,9 @@ class spherical_harmonics_toolbox(QWidget):
         self.plot_power_spectrum.axes = self.plot_power_spectrum.canvas.figure.subplots()
         self.plot_power_spectrum.n_layers_input = 1
 
-        self.toolBox.setCurrentIndex(0)
-        self.toolBox.currentWidget().layout().removeWidget(self.placeholder_curv)
-        self.toolBox.currentWidget().layout().addWidget(self.histogram_curvature)
+        self.toolBox.setCurrentIndex(1)
+        self.toolBox.currentWidget().layout().removeWidget(self.placeholder_spectrum)
+        self.toolBox.currentWidget().layout().addWidget(self.plot_power_spectrum)
 
     def update_power_spectrum(self):
         self._get_data_from_viewer()
@@ -75,7 +76,10 @@ class spherical_harmonics_toolbox(QWidget):
             self.plot_power_spectrum.axes.plot(p)
 
         self.plot_power_spectrum.axes.set_xlabel('Degree l')
-        self.plot_power_spectrum.axes.set_xlabel('Power per degree')
+        self.plot_power_spectrum.axes.set_ylabel('Power per degree')
+        self.plot_power_spectrum.axes.set_yscale('log')
+        self.plot_power_spectrum.axes.grid(which='major', color='white',
+                                           linestyle='--', alpha=0.7)
 
         self.histogram_curvature.canvas.figure.tight_layout()
         self.histogram_curvature.canvas.draw()
