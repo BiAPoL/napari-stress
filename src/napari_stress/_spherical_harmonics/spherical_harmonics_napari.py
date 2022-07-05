@@ -115,6 +115,7 @@ def measure_curvature(points: PointsData,
 
     features['curvature'] = curvature
     metadata['averaged_curvature_H0'] = curvature.mean()
+    metadata['spherical_harmonics_coefficients'] = coefficients
 
     properties['features'] = features
     properties['metadata'] = metadata
