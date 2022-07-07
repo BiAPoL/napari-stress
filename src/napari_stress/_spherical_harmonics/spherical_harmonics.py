@@ -280,15 +280,10 @@ def calculate_mean_curvature_on_manifold(manifold: mnfd.manifold,
 
 def gauss_bonnet_surface_integrity_test(manifold: mnfd.manifold,
                                         lebedev_fit: lebedev_info.lbdv_info
-                                        ) -> bool:
+                                        ) -> float:
     """ Use Gauss-Bonnet to test our resolution on the manifold."""
     K_lbdv_pts = euc_kf.Combine_Chart_Quad_Vals(manifold.K_A_pts, manifold.K_B_pts, lebedev_fit)
     Gauss_Bonnet_Err = euc_kf.Integral_on_Manny(K_lbdv_pts, manifold, lebedev_fit) - 4*np.pi
     relative_error = abs(Gauss_Bonnet_Err)/(4*np.pi)
     
-    good_frame = True # whether or not the frame passes the test
-    
-    # cutoff for bad frame:
-    if (relative_error > 1.e-2): 
-        good_frame = False
-    return good_frame
+    return relative_error

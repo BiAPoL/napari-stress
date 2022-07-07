@@ -118,12 +118,16 @@ def measure_curvature(points: PointsData,
     curvature = calculate_mean_curvature_on_manifold(manifold,
                                                      lebedev_fit=LBDV_Fit,
                                                      max_degree=max_degree)
+    
+    relative_error = gauss_bonnet_surface_integrity_test(manifold,
+                                                         lebedev_fit=LBDV_Fit)
 
     properties, features, metadata = {}, {}, {}
 
     features['curvature'] = curvature
     metadata['averaged_curvature_H0'] = curvature.mean()
     metadata['spherical_harmonics_coefficients'] = coefficients
+    metadata['gauss_bonnet_relative_error'] = relative_error
 
     properties['features'] = features
     properties['metadata'] = metadata
