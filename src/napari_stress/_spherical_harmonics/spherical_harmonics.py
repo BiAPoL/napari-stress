@@ -242,7 +242,7 @@ def get_normals_on_manifold(manifold: mnfd.manifold,
     normals_lbdv_points = np.stack([normal_X_lbdv_pts, normal_Y_lbdv_pts, normal_Z_lbdv_pts])
     return normals_lbdv_points.squeeze().transpose()
 
-def calculate_mean_curvature_on_manifold(lebedev_points: PointsData,
+def calculate_mean_curvature_on_manifold(manifold: mnfd.manifold,
                                          lebedev_fit: lebedev_info.lbdv_info,
                                          max_degree: int) -> np.ndarray:
     """
@@ -262,7 +262,6 @@ def calculate_mean_curvature_on_manifold(lebedev_points: PointsData,
         Mean curvature value for every lebedev point.
 
     """
-    manifold = create_manifold(lebedev_points, lebedev_fit, max_degree)
     normals = get_normals_on_manifold(manifold, lebedev_fit)
 
     # Test orientation:
@@ -282,7 +281,7 @@ def calculate_mean_curvature_on_manifold(lebedev_points: PointsData,
 def gauss_bonnet_surface_integrity_test(manifold: mnfd.manifold,
                                         lebedev_fit: lebedev_info.lbdv_info
                                         ) -> bool:
-	""" Use Gauss-Bonnet to test our resolution of the manifold."""
+    """ Use Gauss-Bonnet to test our resolution on the manifold."""
     K_lbdv_pts = euc_kf.Combine_Chart_Quad_Vals(manifold.K_A_pts, manifold.K_B_pts, lebedev_fit)
     Gauss_Bonnet_Err = euc_kf.Integral_on_Manny(K_lbdv_pts, manifold, lebedev_fit) - 4*np.pi
     relative_error = abs(Gauss_Bonnet_Err)/(4*np.pi)

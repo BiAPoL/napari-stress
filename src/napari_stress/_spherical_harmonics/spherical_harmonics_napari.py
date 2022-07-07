@@ -8,7 +8,9 @@ from .toolbox import spherical_harmonics_toolbox
 from .spherical_harmonics import shtools_spherical_harmonics_expansion,\
     stress_spherical_harmonics_expansion,\
     lebedev_quadrature,\
-    calculate_mean_curvature_on_manifold
+    calculate_mean_curvature_on_manifold,\
+    gauss_bonnet_surface_integrity_test,\
+    create_manifold
 
 import napari
 from napari_tools_menu import register_function
@@ -107,7 +109,13 @@ def measure_curvature(points: PointsData,
     lebedev_points, LBDV_Fit = lebedev_quadrature(coefficients,
                                                   number_of_quadrature_points,
                                                   use_minimal_point_set=use_minimal_point_set)
-    curvature = calculate_mean_curvature_on_manifold(lebedev_points,
+    # create manifold object
+    manifold = create_manifold(lebedev_points,
+                               LBDV_Fit,
+                               max_degree=coefficients.shape[-1])
+    
+    # calculate curvature on manifold
+    curvature = calculate_mean_curvature_on_manifold(manifold,
                                                      lebedev_fit=LBDV_Fit,
                                                      max_degree=max_degree)
 
