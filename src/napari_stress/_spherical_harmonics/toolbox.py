@@ -30,6 +30,7 @@ class spherical_harmonics_toolbox(QWidget):
 
         self.update_curvature_histogram()
         self.update_power_spectrum()
+        self.update_gauss_bonnet()
 
         self._setup_callbacks()
 
@@ -40,6 +41,7 @@ class spherical_harmonics_toolbox(QWidget):
 
         self.viewer.dims.events.current_step.connect(self.update_curvature_histogram)
         self.viewer.dims.events.current_step.connect(self.update_power_spectrum)
+        self.viewer.dims.events.current_step.connect(self.update_gauss_bonnet)
 
     def _get_data_from_viewer(self):
         """Find the associated layer with this plugin in the viewer"""
@@ -49,6 +51,7 @@ class spherical_harmonics_toolbox(QWidget):
     def _first_time_setup(self):
         """First time setup of curvature histogram plot"""
 
+        # Curvature histogram
         self.histogram_curvature = NapariMPLWidget(self.viewer)
         self.histogram_curvature.axes = self.histogram_curvature.canvas.figure.subplots()
         self.histogram_curvature.n_layers_input = 1
@@ -57,6 +60,7 @@ class spherical_harmonics_toolbox(QWidget):
         self.toolBox.currentWidget().layout().removeWidget(self.placeholder_curv)
         self.toolBox.currentWidget().layout().addWidget(self.histogram_curvature)
 
+        # Power spectrum
         self.plot_power_spectrum = NapariMPLWidget(self.viewer)
         self.plot_power_spectrum.axes = self.plot_power_spectrum.canvas.figure.subplots()
         self.plot_power_spectrum.n_layers_input = 1
@@ -64,6 +68,11 @@ class spherical_harmonics_toolbox(QWidget):
         self.toolBox.setCurrentIndex(1)
         self.toolBox.currentWidget().layout().removeWidget(self.placeholder_spectrum)
         self.toolBox.currentWidget().layout().addWidget(self.plot_power_spectrum)
+        
+    def update_gauss_bonnet(self):
+        self._get_data_from_viewer()
+        relative_error = self.layer.metadata['gauss_bonnet_relative_error']
+        self.gauss_bonnet_relative_error.setText('{:.5E}'.format(relative_error))        
 
     def update_power_spectrum(self):
         self._get_data_from_viewer()

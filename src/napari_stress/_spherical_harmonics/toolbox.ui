@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>525</width>
-    <height>381</height>
+    <width>476</width>
+    <height>1008</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,15 +17,15 @@
    <item row="0" column="0">
     <widget class="QToolBox" name="toolBox">
      <property name="currentIndex">
-      <number>1</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="page_curvature">
       <property name="geometry">
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>507</width>
-        <height>83</height>
+        <width>458</width>
+        <height>397</height>
        </rect>
       </property>
       <attribute name="label">
@@ -42,8 +42,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>507</width>
-        <height>83</height>
+        <width>458</width>
+        <height>397</height>
        </rect>
       </property>
       <attribute name="label">
@@ -60,8 +60,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>98</width>
-        <height>28</height>
+        <width>458</width>
+        <height>397</height>
        </rect>
       </property>
       <attribute name="label">
@@ -69,7 +69,34 @@
       </attribute>
       <layout class="QGridLayout" name="gridLayout_4">
        <item row="0" column="0">
-        <widget class="QWidget" name="widget_3" native="true"/>
+        <widget class="QLabel" name="label">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The Gauss Bonnet test checks whether the approximated surface fullfills geometric properties. &lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;    From Wikipedia:&lt;/p&gt;&lt;p&gt;    &amp;quot;In the simplest application, the case of a triangle on a plane, the sum&lt;/p&gt;&lt;p&gt;    of its angles is 180 degrees.[1] The Gauss–Bonnet theorem extends this to&lt;/p&gt;&lt;p&gt;    more complicated shapes and curved surfaces, connecting the local and&lt;/p&gt;&lt;p&gt;    global geometries.&amp;quot;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Gauss%E2%80%93Bonnet_theorem&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Source&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="text">
+          <string>Gauss-Bonet relative error:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLabel" name="gauss_bonnet_relative_error">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>

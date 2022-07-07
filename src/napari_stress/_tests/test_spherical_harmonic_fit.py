@@ -22,7 +22,7 @@ def test_frontend_spherical_harmonics():
     assert np.array_equal(ellipse.points().shape, points.shape)
 
 def test_frontend_analysis_toolbox(make_napari_viewer):
-    from napari_stress import spherical_harmonics_toolbox, measure_curvature
+    from napari_stress import measure_curvature
 
     viewer = make_napari_viewer()
 
@@ -30,6 +30,11 @@ def test_frontend_analysis_toolbox(make_napari_viewer):
     viewer.add_points(points[0], **points[1])
 
     measure_curvature(points[0][:, 1:], viewer=viewer, run_analysis_toolbox=True)
+    
+    results_layer = viewer.layers[-1]
+    assert 'averaged_curvature_H0' in results_layer.metadata.keys()
+    assert 'spherical_harmonics_coefficients' in results_layer.metadata.keys()
+    assert 'gauss_bonnet_relative_error' in results_layer.metadata.keys()    
 
 
 def test_spherical_harmonics():

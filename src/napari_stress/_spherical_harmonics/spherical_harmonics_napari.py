@@ -112,7 +112,7 @@ def measure_curvature(points: PointsData,
     # create manifold object
     manifold = create_manifold(lebedev_points,
                                LBDV_Fit,
-                               max_degree=coefficients.shape[-1])
+                               max_degree=coefficients.shape[-1] - 1)
     
     # calculate curvature on manifold
     curvature = calculate_mean_curvature_on_manifold(manifold,

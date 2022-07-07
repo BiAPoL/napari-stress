@@ -6,7 +6,7 @@ functions (e.g., those functions that are visible to napari) in a separated plac
 
 """
 
-from napari.types import PointsData, VectorData
+from napari.types import PointsData, VectorsData
 from typing import Tuple, Union
 import numpy as np
 import vedo
@@ -214,7 +214,7 @@ def create_manifold(points: PointsData,
 
 def get_normals_on_manifold(manifold: mnfd.manifold,
                             lebedev_fit: lebedev_info.lbdv_info
-                            ) -> VectorData:
+                            ) -> VectorsData:
     """
     Calculate normal vectors on a manifold at lebedev points
 
@@ -281,7 +281,23 @@ def calculate_mean_curvature_on_manifold(manifold: mnfd.manifold,
 def gauss_bonnet_surface_integrity_test(manifold: mnfd.manifold,
                                         lebedev_fit: lebedev_info.lbdv_info
                                         ) -> float:
-    """ Use Gauss-Bonnet to test our resolution on the manifold."""
+    """
+    Use Gauss-Bonnet to test our resolution on the manifold.
+    
+    From Wikipedia:
+    "In the simplest application, the case of a triangle on a plane, the sum
+    of its angles is 180 degrees.[1] The Gauss–Bonnet theorem extends this to
+    more complicated shapes and curved surfaces, connecting the local and
+    global geometries."
+    
+    In the case of a radial manifold, the area integral on the surface of a
+    radial manifold should equal 4*pi (surface of unit sphere).
+    
+    See also:
+    ---------
+    https://en.wikipedia.org/wiki/Gauss%E2%80%93Bonnet_theorem
+    
+    """
     K_lbdv_pts = euc_kf.Combine_Chart_Quad_Vals(manifold.K_A_pts, manifold.K_B_pts, lebedev_fit)
     Gauss_Bonnet_Err = euc_kf.Integral_on_Manny(K_lbdv_pts, manifold, lebedev_fit) - 4*np.pi
     relative_error = abs(Gauss_Bonnet_Err)/(4*np.pi)
