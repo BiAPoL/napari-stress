@@ -32,16 +32,28 @@ class spherical_harmonics_toolbox(QWidget):
         self.update_power_spectrum()
         self.update_gauss_bonnet()
 
+        self.things_to_update_in_tab = {
+            0: self.update_curvature_histogram,
+            1: self.update_power_spectrum,
+            2: self.update_gauss_bonnet
+            }
+        
         self._setup_callbacks()
+        
+    def update_plots(self):
+        """Update things in the currently selected tab"""
+        selected_tab = self.toolBox.currentIndex()
+        print(f'Updating tab {selected_tab}: {str(self.things_to_update_in_tab[selected_tab])}')
+        self.things_to_update_in_tab[selected_tab]()
 
     def _setup_callbacks(self):
         """Disconnect some default signals and hook up own signals"""
         self.viewer.dims.events.current_step.disconnect(self.histogram_curvature._draw)
         self.viewer.layers.selection.events.changed.disconnect(self.histogram_curvature.update_layers)
 
-        self.viewer.dims.events.current_step.connect(self.update_curvature_histogram)
-        self.viewer.dims.events.current_step.connect(self.update_power_spectrum)
-        self.viewer.dims.events.current_step.connect(self.update_gauss_bonnet)
+        self.viewer.dims.events.current_step.connect(self.update_plots)
+        self.toolBox.currentChanged.connect(self.update_plots)
+        self.button_run_measurement.clicked.connect(self.update_plots)
 
     def _get_data_from_viewer(self):
         """Find the associated layer with this plugin in the viewer"""
@@ -54,7 +66,7 @@ class spherical_harmonics_toolbox(QWidget):
         # Curvature histogram
         self.histogram_curvature = NapariMPLWidget(self.viewer)
         self.histogram_curvature.axes = self.histogram_curvature.canvas.figure.subplots()
-        self.histogram_curvature.n_layers_input = 1
+        # self.histogram_curvature.n_selected_layers = 0
 
         self.toolBox.setCurrentIndex(0)
         self.toolBox.currentWidget().layout().removeWidget(self.placeholder_curv)
@@ -63,7 +75,7 @@ class spherical_harmonics_toolbox(QWidget):
         # Power spectrum
         self.plot_power_spectrum = NapariMPLWidget(self.viewer)
         self.plot_power_spectrum.axes = self.plot_power_spectrum.canvas.figure.subplots()
-        self.plot_power_spectrum.n_layers_input = 1
+        # self.plot_power_spectrum.n_selected_layers = 0
 
         self.toolBox.setCurrentIndex(1)
         self.toolBox.currentWidget().layout().removeWidget(self.placeholder_spectrum)
@@ -90,8 +102,7 @@ class spherical_harmonics_toolbox(QWidget):
         self.plot_power_spectrum.axes.grid(which='major', color='white',
                                            linestyle='--', alpha=0.7)
 
-        self.histogram_curvature.canvas.figure.tight_layout()
-        self.histogram_curvature.canvas.draw()
+        self.plot_power_spectrum.canvas.draw()
 
     def update_curvature_histogram(self):
 
@@ -119,5 +130,4 @@ class spherical_harmonics_toolbox(QWidget):
         self.histogram_curvature.axes.set_xlabel('Curvature H')
         self.histogram_curvature.axes.set_ylabel('Occurrences [#]')
 
-        self.histogram_curvature.canvas.figure.tight_layout()
         self.histogram_curvature.canvas.draw()

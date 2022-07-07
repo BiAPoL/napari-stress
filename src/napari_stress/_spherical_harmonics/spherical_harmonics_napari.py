@@ -142,6 +142,7 @@ def measure_curvature(points: PointsData,
         else:
             layer = viewer.layers[properties['name']]
             layer.features = features
+            layer.metadata = metadata
             layer.data = lebedev_points
 
         if run_analysis_toolbox:
