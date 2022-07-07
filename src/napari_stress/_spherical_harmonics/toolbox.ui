@@ -7,8 +7,20 @@
     <x>0</x>
     <y>0</y>
     <width>476</width>
-    <height>1008</height>
+    <height>699</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>0</width>
+    <height>300</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Form</string>
@@ -17,7 +29,7 @@
    <item row="0" column="0">
     <widget class="QToolBox" name="toolBox">
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="page_curvature">
       <property name="geometry">
@@ -25,7 +37,7 @@
         <x>0</x>
         <y>0</y>
         <width>458</width>
-        <height>397</height>
+        <height>571</height>
        </rect>
       </property>
       <attribute name="label">
@@ -33,7 +45,20 @@
       </attribute>
       <layout class="QGridLayout" name="gridLayout_2">
        <item row="0" column="0">
-        <widget class="QWidget" name="placeholder_curv" native="true"/>
+        <widget class="QWidget" name="placeholder_curv" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>200</height>
+          </size>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -43,7 +68,7 @@
         <x>0</x>
         <y>0</y>
         <width>458</width>
-        <height>397</height>
+        <height>571</height>
        </rect>
       </property>
       <attribute name="label">
@@ -51,7 +76,14 @@
       </attribute>
       <layout class="QGridLayout" name="gridLayout_3">
        <item row="0" column="0">
-        <widget class="QWidget" name="placeholder_spectrum" native="true"/>
+        <widget class="QWidget" name="placeholder_spectrum" native="true">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>200</height>
+          </size>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -61,7 +93,7 @@
         <x>0</x>
         <y>0</y>
         <width>458</width>
-        <height>397</height>
+        <height>571</height>
        </rect>
       </property>
       <attribute name="label">
@@ -108,19 +140,6 @@
       <string>Measure</string>
      </property>
     </widget>
-   </item>
-   <item row="2" column="0">
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
    </item>
   </layout>
  </widget>
