@@ -1,6 +1,6 @@
 __version__ = "0.0.15"
 
-from . import measurements
+from . import _measurements as measurements
 from . import _utils as utils
 
 from ._refine_surfaces import trace_refinement_of_surface
