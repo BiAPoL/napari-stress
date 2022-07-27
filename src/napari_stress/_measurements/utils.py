@@ -58,7 +58,7 @@ def naparify_measurement(function):
         print(name, str(value.annotation))
         if value.annotation is manifold:
             # replace parameter annotation with napari.layers.Points
-            parameters.append(inspect.Parameter(name, inspect.Parameter.POSITIONAL_OR_KEYWORD, annotation="napari.layers.Points", default=None))
+            parameters.append(inspect.Parameter(name, inspect.Parameter.POSITIONAL_OR_KEYWORD, annotation="napari.layers.Points"))
         else:
             parameters.append(value)
 
