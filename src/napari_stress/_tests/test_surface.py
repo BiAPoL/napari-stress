@@ -4,6 +4,22 @@ import napari_stress
 import vedo
 import napari
 
+def test_smoothing():
+    from napari_stress import smoothMLS2D, smooth_sinc
+    import vedo
+
+    sphere = vedo.shapes.Sphere(res=30)
+    points = sphere.points() * 10
+    faces = np.asarray(sphere.faces())
+    points += np.random.uniform(size=points.shape)
+
+    smoothed_points = smoothMLS2D(points, factor=0.25, radius=0)
+    smoothed_points = smooth_sinc((points, faces))
+
+    points = napari_stress.get_droplet_point_cloud()[0][0][:, 1:]
+    smoothed_points = smoothMLS2D(points, factor=1, radius=0)
+    smoothed_points = smoothMLS2D(points, factor=1, radius=5)
+
 def test_reconstruction():
     points = vedo.shapes.Ellipsoid().points() * 100
 
@@ -34,7 +50,5 @@ def test_ellipsoid_points():
     # directions_4d[directions_4d[:,0] == 0, 1:] = pointcloud - pointcloud.mean(axis=0)[None, :]
     # directions_4d[directions_4d[:,0] == 1, 1:] = pointcloud - (pointcloud + 1).mean(axis=0)[None, :]
 
-
-
 if __name__ == '__main__':
-    test_ellipsoid_points()
+    test_smoothing()

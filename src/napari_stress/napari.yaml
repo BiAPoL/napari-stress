@@ -25,9 +25,14 @@ contributions:
       python_name: napari_stress._spherical_harmonics.spherical_harmonics_napari:measure_curvature
       title: Measure spherical-harmonics approximated curvature
 
+    # Point operations
     - id: napari-stress.extract_vertex_points
       python_name: napari_stress._surface:extract_vertex_points
       title: Extract surface vertices as points data
+
+    - id: napari-stress.smooth_MLS2D
+      python_name: napari_stress._surface:smoothMLS2D
+      title: Smooth a pointcloud with moving least squares algorithm
 
     - id: napari-stress.fit_ellipsoid_points
       python_name: napari_stress._surface:fit_ellipsoid_to_pointcloud_points
@@ -60,6 +65,10 @@ contributions:
     - command: napari-stress.extract_vertex_points
       autogenerate: true
       display_name: Create points from surface vertices
+
+    - command: napari-stress.smooth_MLS2D
+      autogenerate: true
+      display_name: Smooth pointcloud MLS2D
 
     - command: napari-stress.fit_ellipsoid_points
       autogenerate: true

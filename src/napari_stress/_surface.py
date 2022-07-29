@@ -116,29 +116,83 @@ def extract_vertex_points(surface: SurfaceData) -> PointsData:
     PointsData
 
     """
-    return surface[0]
+    points = surface[0]
+    return points
 
 
 @register_function(menu="Surfaces > Smoothing (Windowed Sinc, vedo, n-STRESS)")
 @frame_by_frame
 def smooth_sinc(surface: SurfaceData,
-                niter: int = 15,
+                n_iterations: int = 15,
                 passBand: float = 0.1,
                 edgeAngle: float = 15,
                 feature_angle: float = 60,
                 boundary: bool = False) -> SurfaceData:
+    """
+    Adjust mesh point positions using the Windowed Sinc function interpolation kernel.
+
+    Parameters
+    ----------
+    surface : SurfaceData
+        DESCRIPTION.
+    n_iterations : int, optional
+        Number of iteratios. The default is 15.
+    passBand : float, optional
+        Passband of sinc filter. The default is 0.1.
+    edgeAngle : float, optional
+        Edge angle to control smoothing along edges. The default is 15.
+    feature_angle : float, optional
+        Specifies the feature angle for sharp edge identification. The default is 60.
+    boundary : bool, optional
+        The default is False.
+
+    Returns
+    -------
+    SurfaceData
+
+    See also
+    --------
+    https://vedo.embl.es/autodocs/content/vedo/mesh.html#vedo.mesh.Mesh.smooth
+
+    """
 
     mesh = vedo.mesh.Mesh((surface[0], surface[1]))
-    mesh.smooth(niter=niter, passBand=passBand,
-                edgeAngle=edgeAngle, featureAngle=feature_angle,
+    mesh.smooth(niter=n_iterations,
+                passBand=passBand,
+                edgeAngle=edgeAngle,
+                featureAngle=feature_angle,
                 boundary=boundary)
     return (mesh.points(), np.asarray(mesh.faces(), dtype=int))
 
-@register_function(menu="Surfaces > Smoothing (MLS2D, vedo, n-STRESS)")
+@register_function(menu="Points > Smoothing (MLS2D, vedo, n-STRESS)")
 @frame_by_frame
 def smoothMLS2D(points: PointsData,
-                factor: float = 0.5,
-                radius: float = None) -> PointsData:
+                factor: float = 0.25,
+                radius: float = 1.0) -> PointsData:
+    """
+    Smooth points with a Moving Least Squares algorithm variant.
+
+    Parameters
+    ----------
+    points : PointsData
+    f : float, optional
+        Smoothing factor - typical range is [0,2]. Will be ignored if radius is
+        different from 0. The default is 0.25.
+    radius : float, optional
+        Search radius for neighboring points to identify isolated points.
+        Set this value to zero to ignore it. The default is 1.0.
+
+    Returns
+    -------
+    PointsData
+
+    See also
+    --------
+    https://vedo.embl.es/autodocs/content/vedo/pointcloud.html#vedo.pointcloud.Points.smoothMLS2D
+
+    """
+    if radius == 0:
+        radius = None
 
     pointcloud = vedo.pointcloud.Points(points)
     pointcloud.smoothMLS2D(f=factor, radius=radius)

@@ -2,7 +2,7 @@
 import numpy as np
 
 
-def test_rescaling4d():
+def test_rescaling():
     from napari_stress import rescale
 
     # Test for 4D
